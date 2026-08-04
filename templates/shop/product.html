@@ -57,6 +57,14 @@
             </button>
         </form>
         {% endif %}
+
+        {% set p_price = (product.discount_price or product.price)|format_price %}
+        {% set wa_msg = "Hi Rao's Mobiles, I want to buy " ~ product.name ~ " for " ~ p_price ~ ". Is it available?" %}
+        <div style="margin-top: 14px;">
+            <a href="https://wa.me/917386738665?text={{ wa_msg|urlencode }}" target="_blank" class="btn" style="width: 100%; background: #25D366; color: #ffffff; font-weight: 800; font-size: 15.5px; padding: 14px 24px; border-radius: var(--radius-sm); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4); transition: var(--transition);">
+                <i class="fab fa-whatsapp" style="font-size: 22px;"></i> Order via WhatsApp
+            </a>
+        </div>
     </div>
 </div>
 
