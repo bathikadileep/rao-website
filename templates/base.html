@@ -155,48 +155,48 @@
         </div>
     </div>
 
-    <!-- Clean White Footer Section -->
-    <footer class="footer" style="background: #ffffff; color: #1F1B2E; border-top: 1px solid #E5E1F0; padding: 64px 24px 32px; margin-top: 0;">
+    <!-- Clean Signature Orange Footer Section -->
+    <footer class="footer" style="background: linear-gradient(135deg, #EF5B25 0%, #D84A16 100%); color: #ffffff; border-top: 1px solid rgba(255, 255, 255, 0.2); padding: 64px 24px 32px; margin-top: 0;">
         <div class="footer-container" style="max-width: 1320px; margin: 0 auto;">
             <div class="footer-grid" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px;">
                 <div class="footer-col">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
-                        <img src="{{ url_for('static', filename='images/rao_logo.svg') }}" alt="Rao's Mobiles Logo" style="width: 44px; height: 44px; filter: drop-shadow(0 2px 8px rgba(239,91,37,0.4));">
+                        <img src="{{ url_for('static', filename='images/rao_logo.svg') }}" alt="Rao's Mobiles Logo" style="width: 44px; height: 44px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));">
                         <div>
-                            <span class="logo-raos" style="color: #0F0A24; font-size: 22px; font-weight: 900; line-height: 1; letter-spacing: -0.5px;">RAO'S <span style="color: #EF5B25;">MOBILES</span></span>
-                            <span class="logo-subtitle" style="color: #6E6885; font-size: 9px; font-weight: 700; letter-spacing: 1px; display: block;">ACCESSORIES & REPAIR</span>
+                            <span class="logo-raos" style="color: #ffffff; font-size: 22px; font-weight: 900; line-height: 1; letter-spacing: -0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">RAO'S <span style="color: #FFD700;">MOBILES</span></span>
+                            <span class="logo-subtitle" style="color: rgba(255, 255, 255, 0.85); font-size: 9px; font-weight: 700; letter-spacing: 1px; display: block;">ACCESSORIES & REPAIR</span>
                         </div>
                     </div>
-                    <p class="footer-desc" style="color: #5A546E; font-size: 14.5px; line-height: 1.7; margin-top: 8px;">Your trusted mobile store in Narasaraopet for smartphones, original display combos, premium cases, screen guards & expert chip-level mobile repairing.</p>
+                    <p class="footer-desc" style="color: rgba(255, 255, 255, 0.9); font-size: 14.5px; line-height: 1.7; margin-top: 8px;">Your trusted mobile store in Narasaraopet for smartphones, original display combos, premium cases, screen guards & expert chip-level mobile repairing.</p>
                 </div>
                 <div class="footer-col">
-                    <h4 style="color: #0F0A24; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px;">Categories</h4>
-                    <a href="{{ url_for('shop.shop') }}?category=smartphones" style="color: #5A546E; display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Smartphones</a>
-                    <a href="{{ url_for('shop.shop') }}?category=display-combo" style="color: #5A546E; display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Display & Combo</a>
-                    <a href="{{ url_for('shop.shop') }}?category=mobile-case-covers" style="color: #5A546E; display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Mobile Cases & Covers</a>
-                    <a href="{{ url_for('shop.shop') }}?category=tempered-glass" style="color: #5A546E; display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Tempered Glass</a>
-                    <a href="{{ url_for('shop.shop') }}?category=chargers-accessories" style="color: #5A546E; display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Chargers & Cables</a>
+                    <h4 style="color: #ffffff; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px; text-shadow: 0 1px 3px rgba(0,0,0,0.2);">Categories</h4>
+                    <a href="{{ url_for('shop.shop') }}?category=smartphones" style="color: rgba(255, 255, 255, 0.9); display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Smartphones</a>
+                    <a href="{{ url_for('shop.shop') }}?category=display-combo" style="color: rgba(255, 255, 255, 0.9); display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Display & Combo</a>
+                    <a href="{{ url_for('shop.shop') }}?category=mobile-case-covers" style="color: rgba(255, 255, 255, 0.9); display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Mobile Cases & Covers</a>
+                    <a href="{{ url_for('shop.shop') }}?category=tempered-glass" style="color: rgba(255, 255, 255, 0.9); display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Tempered Glass</a>
+                    <a href="{{ url_for('shop.shop') }}?category=chargers-accessories" style="color: rgba(255, 255, 255, 0.9); display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Chargers & Cables</a>
                 </div>
                 <div class="footer-col">
-                    <h4 style="color: #0F0A24; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px;">Services</h4>
-                    <a href="{{ url_for('services.services') }}" style="color: #5A546E; display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Mobile Repairing</a>
-                    <a href="{{ url_for('services.services') }}" style="color: #5A546E; display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Display Replacement</a>
-                    <a href="{{ url_for('services.services') }}" style="color: #5A546E; display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Battery Replacement</a>
-                    <a href="{{ url_for('services.services') }}" style="color: #5A546E; display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Water Damage Treatment</a>
+                    <h4 style="color: #ffffff; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px; text-shadow: 0 1px 3px rgba(0,0,0,0.2);">Services</h4>
+                    <a href="{{ url_for('services.services') }}" style="color: rgba(255, 255, 255, 0.9); display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Mobile Repairing</a>
+                    <a href="{{ url_for('services.services') }}" style="color: rgba(255, 255, 255, 0.9); display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Display Replacement</a>
+                    <a href="{{ url_for('services.services') }}" style="color: rgba(255, 255, 255, 0.9); display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Battery Replacement</a>
+                    <a href="{{ url_for('services.services') }}" style="color: rgba(255, 255, 255, 0.9); display: block; padding: 6px 0; font-size: 14px; text-decoration: none; font-weight: 600;">Water Damage Treatment</a>
                 </div>
                 <div class="footer-col">
-                    <h4 style="color: #0F0A24; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px;">Store Location</h4>
-                    <p style="font-size: 14px; color: #5A546E; margin-bottom: 12px; font-weight: 600; line-height: 1.6;">
-                        <i class="fas fa-map-marker-alt" style="color: #EF5B25; margin-right: 8px;"></i>
+                    <h4 style="color: #ffffff; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 18px; text-shadow: 0 1px 3px rgba(0,0,0,0.2);">Store Location</h4>
+                    <p style="font-size: 14px; color: rgba(255, 255, 255, 0.9); margin-bottom: 12px; font-weight: 600; line-height: 1.6;">
+                        <i class="fas fa-map-marker-alt" style="color: #FFD700; margin-right: 8px;"></i>
                         Opp. LG Showroom, Palnadu Road, NARASARAOPET.
                     </p>
-                    <p style="font-size: 14px; color: #5A546E; margin-bottom: 12px; font-weight: 600;">
+                    <p style="font-size: 14px; color: rgba(255, 255, 255, 0.9); margin-bottom: 12px; font-weight: 600;">
                         <i class="fab fa-whatsapp" style="color: #25D366; margin-right: 8px;"></i>
-                        <a href="https://wa.me/917386738665" target="_blank" style="color: #0F0A24; text-decoration: underline; font-weight: 700;">7386738665</a>
+                        <a href="https://wa.me/917386738665" target="_blank" style="color: #ffffff; text-decoration: underline; font-weight: 700;">7386738665</a>
                     </p>
                 </div>
             </div>
-            <div class="footer-bottom" style="border-top: 1px solid #E5E1F0; padding-top: 24px; text-align: center; font-size: 13.5px; color: #6E6885; font-weight: 600;">
+            <div class="footer-bottom" style="border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 24px; text-align: center; font-size: 13.5px; color: rgba(255, 255, 255, 0.85); font-weight: 600;">
                 <p>&copy; 2026 Rao's Mobile Accessories & Repair. All rights reserved.</p>
             </div>
         </div>
