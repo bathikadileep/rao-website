@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
-from models import Product, Category
+from flask_login import current_user
+from models import Product, Category, WishlistItem
 
 shop_bp = Blueprint('shop', __name__)
 
@@ -51,4 +52,11 @@ def product_detail(slug):
         is_active=True
     ).filter(Product.id != product.id).limit(4).all()
 
-    return render_template('shop/product.html', product=product, related=related)
+    in_wishlist = False
+    if current_user.is_authenticated and not current_user.is_admin:
+        in_wishlist = WishlistItem.query.filter_by(
+            user_id=current_user.id, product_id=product.id
+        ).first() is not None
+
+    return render_template('shop/product.html', product=product, related=related, in_wishlist=in_wishlist)
+

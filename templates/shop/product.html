@@ -60,10 +60,24 @@
 
         {% set p_price = (product.discount_price or product.price)|format_price %}
         {% set wa_msg = "Hi Rao's Mobiles, I want to buy " ~ product.name ~ " for " ~ p_price ~ ". Is it available?" %}
-        <div style="margin-top: 14px;">
+        <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 10px;">
             <a href="https://wa.me/917386738665?text={{ wa_msg|urlencode }}" target="_blank" class="btn" style="width: 100%; background: #25D366; color: #ffffff; font-weight: 800; font-size: 15.5px; padding: 14px 24px; border-radius: var(--radius-sm); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4); transition: var(--transition);">
                 <i class="fab fa-whatsapp" style="font-size: 22px;"></i> Order via WhatsApp
             </a>
+            {% if current_user.is_authenticated and not current_user.is_admin %}
+            <form action="{{ url_for('wishlist.toggle_wishlist', product_id=product.id) }}" method="POST" id="wishlist-form">
+                <button type="submit" id="wishlist-btn"
+                    style="width: 100%; background: {% if in_wishlist %}#EF5B25{% else %}transparent{% endif %}; color: {% if in_wishlist %}#ffffff{% else %}#EF5B25{% endif %}; border: 2px solid #EF5B25; font-weight: 800; font-size: 15px; padding: 13px 24px; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.2s ease;">
+                    <i class="fas fa-heart"></i>
+                    {% if in_wishlist %}Saved to Wishlist{% else %}Add to Wishlist{% endif %}
+                </button>
+            </form>
+            {% elif not current_user.is_authenticated %}
+            <a href="{{ url_for('auth.login') }}"
+               style="width: 100%; background: transparent; color: #EF5B25; border: 2px solid #EF5B25; font-weight: 800; font-size: 15px; padding: 13px 24px; border-radius: var(--radius-sm); text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; box-sizing: border-box;">
+                <i class="fas fa-heart"></i> Add to Wishlist
+            </a>
+            {% endif %}
         </div>
     </div>
 </div>
