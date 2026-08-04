@@ -6,7 +6,7 @@ from app import app
 from models import db, User, Category, Product, Service
 
 
-from import_kaggle_dataset import load_and_seed_kaggle_data
+from clean_catalog import clean_and_seed_real_products
 
 
 def seed():
@@ -18,7 +18,7 @@ def seed():
             admin = User(
                 email='admin@rao.com',
                 username='admin',
-                full_name='Nani Rao Admin',
+                full_name='Rao Admin',
                 is_admin=True
             )
             admin.set_password('admin123')
@@ -64,7 +64,8 @@ def seed():
             db.session.commit()
             print(f'Seeded {len(services_data)} client visiting card repair services')
 
-        load_and_seed_kaggle_data()
+        if Product.query.count() == 0:
+            clean_and_seed_real_products()
 
 
 if __name__ == '__main__':
