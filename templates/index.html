@@ -241,6 +241,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    if (window.location.pathname === '/location' || window.location.hash === '#store-location') {
+        const storeSec = document.getElementById('store-location');
+        if (storeSec) {
+            setTimeout(function() {
+                storeSec.scrollIntoView({ behavior: 'smooth' });
+            }, 150);
+        }
+    }
 });
 </script>
 {% endblock %}

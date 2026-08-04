@@ -57,6 +57,7 @@ def add_cache_headers(response):
 
 
 @app.route('/')
+@app.route('/location')
 def index():
     from flask import render_template
     from models import Product, Category, Service

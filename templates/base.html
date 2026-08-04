@@ -33,7 +33,7 @@
                     <a href="https://wa.me/917386738665?text=Hi%20Rao%27s%20Mobiles,%20I%20want%20to%20book%20a%20mobile%20repair" target="_blank" class="pill-nav-item">
                         <i class="fas fa-tools"></i> Book Repair
                     </a>
-                    <a href="{{ url_for('index') }}#store-location" class="pill-nav-item">Location</a>
+                    <a href="/location#store-location" id="nav-location-btn" class="pill-nav-item {{ 'active' if request.path == '/location' }}">Location</a>
                 </div>
 
                 <!-- Integrated Search Field with Button -->
