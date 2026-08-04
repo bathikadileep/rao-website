@@ -1,0 +1,228 @@
+{% extends 'admin/base.html' %}
+{% block title %}Customer Detail – {{ user.full_name or user.username }}{% endblock %}
+{% block admin_content %}
+
+<!-- Header -->
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+    <div style="display:flex; align-items:center; gap:16px;">
+        <a href="{{ url_for('admin.users') }}" style="background:#F3F4F6; color:#374151; border-radius:10px; padding:9px 16px; font-size:13px; font-weight:700; text-decoration:none;">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+        <div>
+            <h1 style="margin:0; font-size:22px; font-weight:900; color:#0B071E;">{{ user.full_name or user.username }}</h1>
+            <p style="margin:2px 0 0; color:#6B7280; font-size:13px;">@{{ user.username }} · Joined {{ user.created_at.strftime('%d %b %Y') }}</p>
+        </div>
+    </div>
+    <!-- WhatsApp button for quick admin contact -->
+    {% if user.phone %}
+    <a href="https://wa.me/91{{ user.phone }}?text=Hi%20{{ user.full_name or user.username }}%2C%20this%20is%20Rao%27s%20Mobiles%20team%20reaching%20out%20about%20your%20order."
+       target="_blank"
+       style="background:#25D366; color:#fff; border-radius:10px; padding:10px 20px; font-weight:700; font-size:13px; text-decoration:none;">
+        <i class="fab fa-whatsapp"></i> WhatsApp Customer
+    </a>
+    {% endif %}
+</div>
+
+<!-- Customer Profile Cards -->
+<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px; margin-bottom:28px;">
+    <div style="background:linear-gradient(135deg,#667eea,#764ba2); border-radius:14px; padding:18px; color:#fff; text-align:center;">
+        <div style="font-size:30px; font-weight:900;">{{ orders|length }}</div>
+        <div style="font-size:11px; opacity:0.9; font-weight:700; text-transform:uppercase;">Total Orders</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#43e97b,#38f9d7); border-radius:14px; padding:18px; color:#fff; text-align:center;">
+        <div style="font-size:30px; font-weight:900;">{{ bookings|length }}</div>
+        <div style="font-size:11px; opacity:0.9; font-weight:700; text-transform:uppercase;">Repair Bookings</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#f093fb,#f5576c); border-radius:14px; padding:18px; color:#fff; text-align:center;">
+        <div style="font-size:30px; font-weight:900;">₹{{ '{:,.0f}'.format(total_spent) }}</div>
+        <div style="font-size:11px; opacity:0.9; font-weight:700; text-transform:uppercase;">Total Spent</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#fa709a,#fee140); border-radius:14px; padding:18px; color:#fff; text-align:center;">
+        <div style="font-size:30px; font-weight:900;">{{ wishlist_items|length }}</div>
+        <div style="font-size:11px; opacity:0.9; font-weight:700; text-transform:uppercase;">Wishlist Items</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#fd7043,#ff8a65); border-radius:14px; padding:18px; color:#fff; text-align:center;">
+        <div style="font-size:30px; font-weight:900;">{{ cart_items|length }}</div>
+        <div style="font-size:11px; opacity:0.9; font-weight:700; text-transform:uppercase;">Items in Cart</div>
+    </div>
+</div>
+
+<div style="display:grid; grid-template-columns:320px 1fr; gap:24px; align-items:start; flex-wrap:wrap;">
+
+    <!-- Left: Profile Info -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+
+        <!-- Contact Card -->
+        <div style="background:#fff; border-radius:16px; box-shadow:0 2px 16px rgba(0,0,0,0.06); padding:24px;">
+            <h3 style="margin:0 0 16px; font-size:15px; font-weight:800; color:#0B071E;"><i class="fas fa-id-card" style="color:#667eea; margin-right:8px;"></i>Contact Info</h3>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i class="fas fa-envelope" style="color:#6B7280; width:16px;"></i>
+                    <span style="font-size:13px; color:#374151;">{{ user.email }}</span>
+                </div>
+                {% if user.phone %}
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i class="fas fa-phone" style="color:#6B7280; width:16px;"></i>
+                    <span style="font-size:13px; color:#374151;">{{ user.phone }}</span>
+                </div>
+                {% endif %}
+                {% if user.address %}
+                <div style="display:flex; align-items:flex-start; gap:10px;">
+                    <i class="fas fa-map-marker-alt" style="color:#6B7280; width:16px; margin-top:2px;"></i>
+                    <span style="font-size:13px; color:#374151; line-height:1.5;">{{ user.address }}{% if user.city %}, {{ user.city }}{% endif %}{% if user.state %}, {{ user.state }}{% endif %}{% if user.pincode %} - {{ user.pincode }}{% endif %}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Cart Items -->
+        {% if cart_items %}
+        <div style="background:#fff; border-radius:16px; box-shadow:0 2px 16px rgba(0,0,0,0.06); padding:24px;">
+            <h3 style="margin:0 0 16px; font-size:15px; font-weight:800; color:#0B071E;"><i class="fas fa-shopping-bag" style="color:#FA709A; margin-right:8px;"></i>Cart ({{ cart_items|length }} items)</h3>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                {% for item in cart_items %}
+                <div style="display:flex; align-items:center; gap:10px; padding:10px; background:#FFF7ED; border-radius:10px;">
+                    {% if item.product.image_url %}
+                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" style="width:42px; height:42px; object-fit:cover; border-radius:8px; flex-shrink:0;">
+                    {% endif %}
+                    <div style="flex:1; min-width:0;">
+                        <div style="font-size:12px; font-weight:700; color:#0B071E; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ item.product.name }}</div>
+                        <div style="font-size:11px; color:#EA580C; font-weight:800;">₹{{ '{:,.0f}'.format(item.product.discount_price or item.product.price) }} × {{ item.quantity }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Wishlist Items -->
+        {% if wishlist_items %}
+        <div style="background:#fff; border-radius:16px; box-shadow:0 2px 16px rgba(0,0,0,0.06); padding:24px;">
+            <h3 style="margin:0 0 16px; font-size:15px; font-weight:800; color:#0B071E;"><i class="fas fa-heart" style="color:#E11D48; margin-right:8px;"></i>Wishlist ({{ wishlist_items|length }} items)</h3>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                {% for item in wishlist_items %}
+                <div style="display:flex; align-items:center; gap:10px; padding:10px; background:#FFF1F2; border-radius:10px;">
+                    {% if item.product.image_url %}
+                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" style="width:42px; height:42px; object-fit:cover; border-radius:8px; flex-shrink:0;">
+                    {% endif %}
+                    <div style="flex:1; min-width:0;">
+                        <div style="font-size:12px; font-weight:700; color:#0B071E; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ item.product.name }}</div>
+                        <div style="font-size:11px; color:#E11D48; font-weight:800;">₹{{ '{:,.0f}'.format(item.product.discount_price or item.product.price) }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Right: Orders + Bookings -->
+    <div style="display:flex; flex-direction:column; gap:20px;">
+
+        <!-- Orders -->
+        <div style="background:#fff; border-radius:16px; box-shadow:0 2px 16px rgba(0,0,0,0.06); overflow:hidden;">
+            <div style="padding:20px 24px 16px; border-bottom:1px solid #F3F4F6;">
+                <h2 style="margin:0; font-size:16px; font-weight:800; color:#0B071E;"><i class="fas fa-shopping-cart" style="color:#667eea; margin-right:8px;"></i>Purchase History</h2>
+            </div>
+            {% if orders %}
+            <div style="overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                    <thead>
+                        <tr style="background:#F9FAFB;">
+                            <th style="padding:10px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Order #</th>
+                            <th style="padding:10px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Date</th>
+                            <th style="padding:10px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Items</th>
+                            <th style="padding:10px 16px; text-align:right; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Amount</th>
+                            <th style="padding:10px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Status</th>
+                            <th style="padding:10px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Update</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr style="border-top:1px solid #F3F4F6;">
+                            <td style="padding:12px 16px; font-weight:800; color:#0B071E;">#{{ order.id }}</td>
+                            <td style="padding:12px 16px; color:#6B7280; font-size:12px;">{{ order.created_at.strftime('%d %b %Y') }}</td>
+                            <td style="padding:12px 16px; color:#374151;">
+                                {% for oi in order.items[:2] %}
+                                    <div style="font-size:11px;">{{ oi.product.name[:30] }}{% if oi.product.name|length > 30 %}…{% endif %} ×{{ oi.quantity }}</div>
+                                {% endfor %}
+                                {% if order.items|length > 2 %}<div style="font-size:11px; color:#9CA3AF;">+{{ order.items|length - 2 }} more</div>{% endif %}
+                            </td>
+                            <td style="padding:12px 16px; text-align:right; font-weight:800; color:#EF5B25; font-size:14px;">₹{{ '{:,.0f}'.format(order.total_amount) }}</td>
+                            <td style="padding:12px 16px;">
+                                {% set sc = {'pending':'#F59E0B','confirmed':'#3B82F6','shipped':'#8B5CF6','delivered':'#10B981','cancelled':'#EF4444'} %}
+                                <span style="background:{{ sc.get(order.status,'#6B7280') }}20; color:{{ sc.get(order.status,'#6B7280') }}; border-radius:20px; padding:3px 10px; font-size:11px; font-weight:800;">{{ order.status|capitalize }}</span>
+                            </td>
+                            <td style="padding:12px 16px;">
+                                <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.id) }}" style="display:flex; gap:4px;">
+                                    <select name="status" style="border:1px solid #E5E7EB; border-radius:8px; padding:4px 8px; font-size:11px; color:#374151; background:#fff;">
+                                        {% for s in ['pending','confirmed','shipped','delivered','cancelled'] %}
+                                        <option value="{{ s }}" {{ 'selected' if order.status == s }}>{{ s|capitalize }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" style="background:#0B071E; color:#fff; border:none; border-radius:8px; padding:4px 12px; font-size:11px; font-weight:700; cursor:pointer;">✓</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div style="padding:32px; text-align:center; color:#9CA3AF; font-size:14px;"><i class="fas fa-box-open" style="font-size:28px; margin-bottom:8px; display:block;"></i>No purchases yet</div>
+            {% endif %}
+        </div>
+
+        <!-- Repair Bookings -->
+        <div style="background:#fff; border-radius:16px; box-shadow:0 2px 16px rgba(0,0,0,0.06); overflow:hidden;">
+            <div style="padding:20px 24px 16px; border-bottom:1px solid #F3F4F6;">
+                <h2 style="margin:0; font-size:16px; font-weight:800; color:#0B071E;"><i class="fas fa-screwdriver-wrench" style="color:#43e97b; margin-right:8px;"></i>Repair Bookings</h2>
+            </div>
+            {% if bookings %}
+            <div style="overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                    <thead>
+                        <tr style="background:#F9FAFB;">
+                            <th style="padding:10px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Service</th>
+                            <th style="padding:10px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Phone Model</th>
+                            <th style="padding:10px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Date & Time</th>
+                            <th style="padding:10px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Notes</th>
+                            <th style="padding:10px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Status</th>
+                            <th style="padding:10px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Update</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in bookings %}
+                        <tr style="border-top:1px solid #F3F4F6;">
+                            <td style="padding:12px 16px; font-weight:700; color:#0B071E; font-size:12px;">{{ b.service.name }}</td>
+                            <td style="padding:12px 16px; color:#374151;">{{ b.phone_model }}</td>
+                            <td style="padding:12px 16px; color:#6B7280; font-size:12px;">{{ b.booking_date.strftime('%d %b %Y') }}<br><span style="color:#9CA3AF;">{{ b.time_slot }}</span></td>
+                            <td style="padding:12px 16px; color:#6B7280; font-size:12px; max-width:160px;">{{ b.notes or '—' }}</td>
+                            <td style="padding:12px 16px;">
+                                {% set bs = {'pending':'#F59E0B','confirmed':'#3B82F6','completed':'#10B981','cancelled':'#EF4444'} %}
+                                <span style="background:{{ bs.get(b.status,'#6B7280') }}20; color:{{ bs.get(b.status,'#6B7280') }}; border-radius:20px; padding:3px 10px; font-size:11px; font-weight:800;">{{ b.status|capitalize }}</span>
+                            </td>
+                            <td style="padding:12px 16px;">
+                                <form method="POST" action="{{ url_for('admin.update_booking_status', booking_id=b.id) }}" style="display:flex; gap:4px;">
+                                    <select name="status" style="border:1px solid #E5E7EB; border-radius:8px; padding:4px 8px; font-size:11px; color:#374151; background:#fff;">
+                                        {% for s in ['pending','confirmed','completed','cancelled'] %}
+                                        <option value="{{ s }}" {{ 'selected' if b.status == s }}>{{ s|capitalize }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" style="background:#059669; color:#fff; border:none; border-radius:8px; padding:4px 12px; font-size:11px; font-weight:700; cursor:pointer;">✓</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div style="padding:32px; text-align:center; color:#9CA3AF; font-size:14px;"><i class="fas fa-calendar-xmark" style="font-size:28px; margin-bottom:8px; display:block;"></i>No bookings yet</div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

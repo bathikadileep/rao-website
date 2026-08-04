@@ -1,42 +1,85 @@
 {% extends 'admin/base.html' %}
-{% block title %}Users{% endblock %}
+{% block title %}Customers – Admin{% endblock %}
 {% block admin_content %}
-<h1>Users</h1>
 
-<div class="table-wrapper">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Joined</th>
-                <th>Role</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>#{{ user.id }}</td>
-                <td style="font-weight: 600;">{{ user.username }}</td>
-                <td>{{ user.full_name }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.created_at|format_date }}</td>
-                <td>
-                    <span class="badge {{ 'badge-confirmed' if user.is_admin else 'badge-pending' }}">
-                        {{ 'Admin' if user.is_admin else 'Customer' }}
-                    </span>
-                </td>
-                <td>
-                    <span class="badge {{ 'badge-delivered' if user.is_active_user else 'badge-cancelled' }}">
-                        {{ 'Active' if user.is_active_user else 'Inactive' }}
-                    </span>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+    <h1 style="margin:0; font-size:22px; font-weight:900; color:#0B071E;"><i class="fas fa-users" style="color:#4facfe;"></i> Customers ({{ user_data|length }})</h1>
+    <form method="GET" action="" style="display:flex; gap:8px;">
+        <input type="text" name="q" value="{{ search }}" placeholder="Search by name / email / username..." 
+               style="border:1.5px solid #E5E7EB; border-radius:10px; padding:9px 16px; font-size:14px; min-width:280px; outline:none;">
+        <button type="submit" style="background:#0B071E; color:#fff; border:none; border-radius:10px; padding:9px 20px; font-weight:700; cursor:pointer;">Search</button>
+        {% if search %}<a href="{{ url_for('admin.users') }}" style="background:#F3F4F6; color:#374151; border-radius:10px; padding:9px 16px; font-weight:700; text-decoration:none;">Clear</a>{% endif %}
+    </form>
 </div>
+
+{% if user_data %}
+<div style="background:#fff; border-radius:16px; box-shadow:0 2px 16px rgba(0,0,0,0.06); overflow:hidden;">
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead>
+                <tr style="background:#F9FAFB;">
+                    <th style="padding:12px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Customer</th>
+                    <th style="padding:12px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Contact</th>
+                    <th style="padding:12px 16px; text-align:center; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Orders</th>
+                    <th style="padding:12px 16px; text-align:center; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Bookings</th>
+                    <th style="padding:12px 16px; text-align:center; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Cart</th>
+                    <th style="padding:12px 16px; text-align:center; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Wishlist</th>
+                    <th style="padding:12px 16px; text-align:right; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Total Spent</th>
+                    <th style="padding:12px 16px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Joined</th>
+                    <th style="padding:12px 16px; text-align:center; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in user_data %}
+                <tr style="border-top:1px solid #F3F4F6; transition:background 0.15s;" onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background=''">
+                    <td style="padding:14px 16px;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,#667eea,#764ba2); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px; flex-shrink:0;">
+                                {{ (d.user.full_name or d.user.username)[0]|upper }}
+                            </div>
+                            <div>
+                                <div style="font-weight:700; color:#0B071E;">{{ d.user.full_name or '—' }}</div>
+                                <div style="font-size:11px; color:#9CA3AF;">@{{ d.user.username }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding:14px 16px;">
+                        <div style="font-size:12px; color:#374151;">{{ d.user.email }}</div>
+                        {% if d.user.phone %}<div style="font-size:12px; color:#6B7280;">📞 {{ d.user.phone }}</div>{% endif %}
+                    </td>
+                    <td style="padding:14px 16px; text-align:center;">
+                        <span style="background:#EEF2FF; color:#4F46E5; border-radius:20px; padding:3px 12px; font-weight:800; font-size:13px;">{{ d.order_count }}</span>
+                    </td>
+                    <td style="padding:14px 16px; text-align:center;">
+                        <span style="background:#ECFDF5; color:#059669; border-radius:20px; padding:3px 12px; font-weight:800; font-size:13px;">{{ d.booking_count }}</span>
+                    </td>
+                    <td style="padding:14px 16px; text-align:center;">
+                        <span style="background:#FFF7ED; color:#EA580C; border-radius:20px; padding:3px 12px; font-weight:800; font-size:13px;">{{ d.cart_count }}</span>
+                    </td>
+                    <td style="padding:14px 16px; text-align:center;">
+                        <span style="background:#FFF1F2; color:#E11D48; border-radius:20px; padding:3px 12px; font-weight:800; font-size:13px;">{{ d.wishlist_count }}</span>
+                    </td>
+                    <td style="padding:14px 16px; text-align:right; font-weight:800; color:#EF5B25; font-size:14px;">
+                        ₹{{ '{:,.0f}'.format(d.total_spent) }}
+                    </td>
+                    <td style="padding:14px 16px; font-size:12px; color:#9CA3AF;">{{ d.user.created_at.strftime('%d %b %Y') }}</td>
+                    <td style="padding:14px 16px; text-align:center;">
+                        <a href="{{ url_for('admin.customer_detail', user_id=d.user.id) }}" 
+                           style="background:#0B071E; color:#fff; border-radius:8px; padding:7px 14px; font-size:12px; font-weight:700; text-decoration:none; white-space:nowrap;">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div style="text-align:center; padding:60px; background:#fff; border-radius:16px;">
+    <i class="fas fa-users-slash" style="font-size:48px; color:#D1D5DB; margin-bottom:16px; display:block;"></i>
+    <p style="color:#6B7280; font-size:16px; font-weight:600;">No customers found{% if search %} for "{{ search }}"{% endif %}.</p>
+</div>
+{% endif %}
+
 {% endblock %}

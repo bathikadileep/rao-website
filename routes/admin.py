@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
 from functools import wraps
-from models import db, User, Product, Category, Order, Service, ServiceBooking
+from sqlalchemy import func
+from models import db, User, Product, Category, Order, OrderItem, Service, ServiceBooking, CartItem, WishlistItem
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -20,21 +21,35 @@ def admin_required(f):
 @admin_bp.route('/admin')
 @admin_required
 def dashboard():
-    total_users = User.query.count()
+    total_users = User.query.filter_by(is_admin=False).count()
     total_products = Product.query.count()
     total_orders = Order.query.count()
+    total_bookings = ServiceBooking.query.count()
     pending_orders = Order.query.filter_by(status='pending').count()
     pending_bookings = ServiceBooking.query.filter_by(status='pending').count()
+    confirmed_bookings = ServiceBooking.query.filter_by(status='confirmed').count()
+    completed_bookings = ServiceBooking.query.filter_by(status='completed').count()
     orders = Order.query.order_by(Order.created_at.desc()).limit(20).all()
-    total_revenue = sum(o.total_amount for o in orders if o.status in ('confirmed', 'shipped', 'delivered'))
+    recent_bookings = ServiceBooking.query.order_by(ServiceBooking.created_at.desc()).limit(8).all()
+    total_revenue = db.session.query(func.sum(Order.total_amount)).filter(
+        Order.status.in_(['confirmed', 'shipped', 'delivered'])
+    ).scalar() or 0
+    total_wishlist = WishlistItem.query.count()
+    active_carts = db.session.query(func.count(func.distinct(CartItem.user_id))).scalar() or 0
     return render_template('admin/dashboard.html',
                            total_users=total_users,
                            total_products=total_products,
                            total_orders=total_orders,
+                           total_bookings=total_bookings,
                            pending_orders=pending_orders,
                            pending_bookings=pending_bookings,
+                           confirmed_bookings=confirmed_bookings,
+                           completed_bookings=completed_bookings,
                            orders=orders,
-                           total_revenue=total_revenue)
+                           recent_bookings=recent_bookings,
+                           total_revenue=total_revenue,
+                           total_wishlist=total_wishlist,
+                           active_carts=active_carts)
 
 
 @admin_bp.route('/admin/products')
@@ -121,11 +136,6 @@ def update_order_status(order_id):
     return redirect(url_for('admin.orders'))
 
 
-@admin_bp.route('/admin/users')
-@admin_required
-def users():
-    users = User.query.order_by(User.created_at.desc()).all()
-    return render_template('admin/users.html', users=users)
 
 
 @admin_bp.route('/admin/categories', methods=['GET', 'POST'])
@@ -230,3 +240,60 @@ def update_booking_status(booking_id):
     db.session.commit()
     flash('Booking status updated.', 'success')
     return redirect(url_for('admin.bookings'))
+
+
+@admin_bp.route('/admin/users')
+@admin_required
+def users():
+    search = request.args.get('q', '').strip()
+    query = User.query.filter_by(is_admin=False)
+    if search:
+        query = query.filter(
+            (User.full_name.ilike(f'%{search}%')) |
+            (User.email.ilike(f'%{search}%')) |
+            (User.username.ilike(f'%{search}%'))
+        )
+    all_users = query.order_by(User.created_at.desc()).all()
+
+    # Enrich each user with quick counts
+    user_data = []
+    for u in all_users:
+        order_count = Order.query.filter_by(user_id=u.id).count()
+        booking_count = ServiceBooking.query.filter_by(user_id=u.id).count()
+        cart_count = CartItem.query.filter_by(user_id=u.id).count()
+        wishlist_count = WishlistItem.query.filter_by(user_id=u.id).count()
+        total_spent = db.session.query(func.sum(Order.total_amount)).filter(
+            Order.user_id == u.id,
+            Order.status.in_(['confirmed', 'shipped', 'delivered'])
+        ).scalar() or 0
+        user_data.append({
+            'user': u,
+            'order_count': order_count,
+            'booking_count': booking_count,
+            'cart_count': cart_count,
+            'wishlist_count': wishlist_count,
+            'total_spent': total_spent,
+        })
+
+    return render_template('admin/users.html', user_data=user_data, search=search)
+
+
+@admin_bp.route('/admin/users/<int:user_id>')
+@admin_required
+def customer_detail(user_id):
+    user = User.query.get_or_404(user_id)
+    orders = Order.query.filter_by(user_id=user_id).order_by(Order.created_at.desc()).all()
+    bookings = ServiceBooking.query.filter_by(user_id=user_id).order_by(ServiceBooking.booking_date.desc()).all()
+    cart_items = CartItem.query.filter_by(user_id=user_id).all()
+    wishlist_items = WishlistItem.query.filter_by(user_id=user_id).all()
+    total_spent = db.session.query(func.sum(Order.total_amount)).filter(
+        Order.user_id == user_id,
+        Order.status.in_(['confirmed', 'shipped', 'delivered'])
+    ).scalar() or 0
+    return render_template('admin/customer_detail.html',
+                           user=user,
+                           orders=orders,
+                           bookings=bookings,
+                           cart_items=cart_items,
+                           wishlist_items=wishlist_items,
+                           total_spent=total_spent)

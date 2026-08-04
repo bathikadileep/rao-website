@@ -1,75 +1,156 @@
 {% extends 'admin/base.html' %}
-{% block title %}Admin Dashboard{% endblock %}
+{% block title %}Admin Dashboard – RAO'S MOBILES{% endblock %}
 {% block admin_content %}
-<h1>Overview</h1>
 
-<div class="stats-grid">
-    <div class="stat-card">
-        <div class="stat-card-label">Total Revenue</div>
-        <div class="stat-card-value stat-card-accent">{{ total_revenue|format_price }}</div>
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:12px;">
+    <div>
+        <h1 style="margin:0; font-size:26px; font-weight:900; color:#0B071E;">📊 Admin Dashboard</h1>
+        <p style="margin:4px 0 0; color:#6B7280; font-size:14px;">Welcome back, {{ current_user.full_name or current_user.username }}!</p>
     </div>
-    <div class="stat-card">
-        <div class="stat-card-label">Total Orders</div>
-        <div class="stat-card-value">{{ total_orders }}</div>
+    <a href="{{ url_for('index') }}" style="background:#0B071E; color:#fff; border-radius:10px; padding:10px 20px; text-decoration:none; font-weight:700; font-size:13px;">
+        <i class="fas fa-store"></i> View Store
+    </a>
+</div>
+
+<!-- KPI Stats Grid -->
+<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:16px; margin-bottom:32px;">
+
+    <div style="background:linear-gradient(135deg,#667eea,#764ba2); border-radius:16px; padding:20px; color:#fff;">
+        <div style="font-size:28px; margin-bottom:4px;">₹{{ '{:,.0f}'.format(total_revenue) }}</div>
+        <div style="font-size:12px; opacity:0.85; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Total Revenue</div>
+        <i class="fas fa-indian-rupee-sign" style="position:relative; float:right; font-size:32px; opacity:0.2; margin-top:-40px;"></i>
     </div>
-    <div class="stat-card">
-        <div class="stat-card-label">Pending Orders</div>
-        <div class="stat-card-value">{{ pending_orders }}</div>
+
+    <div style="background:linear-gradient(135deg,#f093fb,#f5576c); border-radius:16px; padding:20px; color:#fff;">
+        <div style="font-size:28px; margin-bottom:4px;">{{ total_orders }}</div>
+        <div style="font-size:12px; opacity:0.85; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Total Orders</div>
+        <span style="background:rgba(255,255,255,0.25); border-radius:20px; padding:2px 10px; font-size:11px; font-weight:800;">{{ pending_orders }} pending</span>
     </div>
-    <div class="stat-card">
-        <div class="stat-card-label">Pending Bookings</div>
-        <div class="stat-card-value">{{ pending_bookings }}</div>
+
+    <div style="background:linear-gradient(135deg,#4facfe,#00f2fe); border-radius:16px; padding:20px; color:#fff;">
+        <div style="font-size:28px; margin-bottom:4px;">{{ total_bookings }}</div>
+        <div style="font-size:12px; opacity:0.85; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Repair Bookings</div>
+        <span style="background:rgba(255,255,255,0.25); border-radius:20px; padding:2px 10px; font-size:11px; font-weight:800;">{{ pending_bookings }} pending</span>
     </div>
-    <div class="stat-card">
-        <div class="stat-card-label">Total Phones</div>
-        <div class="stat-card-value">{{ total_products }}</div>
+
+    <div style="background:linear-gradient(135deg,#43e97b,#38f9d7); border-radius:16px; padding:20px; color:#fff;">
+        <div style="font-size:28px; margin-bottom:4px;">{{ total_users }}</div>
+        <div style="font-size:12px; opacity:0.85; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Customers</div>
+        <i class="fas fa-users" style="float:right; font-size:28px; opacity:0.2; margin-top:-36px;"></i>
     </div>
-    <div class="stat-card">
-        <div class="stat-card-label">Total Users</div>
-        <div class="stat-card-value">{{ total_users }}</div>
+
+    <div style="background:linear-gradient(135deg,#fa709a,#fee140); border-radius:16px; padding:20px; color:#fff;">
+        <div style="font-size:28px; margin-bottom:4px;">{{ total_wishlist }}</div>
+        <div style="font-size:12px; opacity:0.85; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Wishlist Saves</div>
+        <i class="fas fa-heart" style="float:right; font-size:28px; opacity:0.2; margin-top:-36px;"></i>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#a18cd1,#fbc2eb); border-radius:16px; padding:20px; color:#fff;">
+        <div style="font-size:28px; margin-bottom:4px;">{{ active_carts }}</div>
+        <div style="font-size:12px; opacity:0.85; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Active Carts</div>
+        <i class="fas fa-shopping-bag" style="float:right; font-size:28px; opacity:0.2; margin-top:-36px;"></i>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#fd7043,#ff8a65); border-radius:16px; padding:20px; color:#fff;">
+        <div style="font-size:28px; margin-bottom:4px;">{{ completed_bookings }}</div>
+        <div style="font-size:12px; opacity:0.85; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Completed Repairs</div>
+        <i class="fas fa-check-circle" style="float:right; font-size:28px; opacity:0.2; margin-top:-36px;"></i>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#0B071E,#2d1b6b); border-radius:16px; padding:20px; color:#fff;">
+        <div style="font-size:28px; margin-bottom:4px;">{{ total_products }}</div>
+        <div style="font-size:12px; opacity:0.85; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Products Listed</div>
+        <i class="fas fa-mobile-screen-button" style="float:right; font-size:28px; opacity:0.2; margin-top:-36px;"></i>
     </div>
 </div>
 
-<div class="section-header">
-    <h2 class="section-title" style="font-size: 20px;">Recent Orders</h2>
-    <a href="{{ url_for('admin.orders') }}" class="btn btn-outline btn-sm">View All</a>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:32px;">
+
+    <!-- Recent Orders -->
+    <div style="background:#fff; border-radius:16px; box-shadow:0 2px 16px rgba(0,0,0,0.06); overflow:hidden;">
+        <div style="padding:20px 24px 16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F3F4F6;">
+            <h2 style="margin:0; font-size:16px; font-weight:800; color:#0B071E;"><i class="fas fa-shopping-cart" style="color:#667eea; margin-right:8px;"></i>Recent Orders</h2>
+            <a href="{{ url_for('admin.orders') }}" style="font-size:12px; font-weight:700; color:#667eea; text-decoration:none;">View All →</a>
+        </div>
+        <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                <thead>
+                    <tr style="background:#F9FAFB;">
+                        <th style="padding:10px 14px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Order</th>
+                        <th style="padding:10px 14px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Customer</th>
+                        <th style="padding:10px 14px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Amount</th>
+                        <th style="padding:10px 14px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders[:8] %}
+                    <tr style="border-top:1px solid #F3F4F6;">
+                        <td style="padding:10px 14px; font-weight:700; color:#0B071E;">#{{ order.id }}</td>
+                        <td style="padding:10px 14px; color:#374151;">{{ order.shipping_name or 'N/A' }}</td>
+                        <td style="padding:10px 14px; font-weight:700; color:#EF5B25;">₹{{ '{:,.0f}'.format(order.total_amount) }}</td>
+                        <td style="padding:10px 14px;">
+                            {% set sc = {'pending':'#F59E0B','confirmed':'#3B82F6','shipped':'#8B5CF6','delivered':'#10B981','cancelled':'#EF4444'} %}
+                            <span style="background:{{ sc.get(order.status,'#6B7280') }}20; color:{{ sc.get(order.status,'#6B7280') }}; border-radius:20px; padding:3px 10px; font-size:11px; font-weight:800;">{{ order.status|capitalize }}</span>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" style="padding:24px; text-align:center; color:#9CA3AF;">No orders yet</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Recent Bookings -->
+    <div style="background:#fff; border-radius:16px; box-shadow:0 2px 16px rgba(0,0,0,0.06); overflow:hidden;">
+        <div style="padding:20px 24px 16px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F3F4F6;">
+            <h2 style="margin:0; font-size:16px; font-weight:800; color:#0B071E;"><i class="fas fa-calendar-check" style="color:#43e97b; margin-right:8px;"></i>Recent Bookings</h2>
+            <a href="{{ url_for('admin.bookings') }}" style="font-size:12px; font-weight:700; color:#43e97b; text-decoration:none;">View All →</a>
+        </div>
+        <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                <thead>
+                    <tr style="background:#F9FAFB;">
+                        <th style="padding:10px 14px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Customer</th>
+                        <th style="padding:10px 14px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Phone Model</th>
+                        <th style="padding:10px 14px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Date</th>
+                        <th style="padding:10px 14px; text-align:left; font-weight:700; color:#6B7280; font-size:11px; text-transform:uppercase;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in recent_bookings %}
+                    <tr style="border-top:1px solid #F3F4F6;">
+                        <td style="padding:10px 14px; font-weight:600; color:#0B071E;">{{ b.user.full_name or b.user.username }}</td>
+                        <td style="padding:10px 14px; color:#374151;">{{ b.phone_model }}</td>
+                        <td style="padding:10px 14px; color:#6B7280; font-size:12px;">{{ b.booking_date.strftime('%d %b %Y') }}</td>
+                        <td style="padding:10px 14px;">
+                            {% set bs = {'pending':'#F59E0B','confirmed':'#3B82F6','completed':'#10B981','cancelled':'#EF4444'} %}
+                            <span style="background:{{ bs.get(b.status,'#6B7280') }}20; color:{{ bs.get(b.status,'#6B7280') }}; border-radius:20px; padding:3px 10px; font-size:11px; font-weight:800;">{{ b.status|capitalize }}</span>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" style="padding:24px; text-align:center; color:#9CA3AF;">No bookings yet</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<div class="table-wrapper">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Order #</th>
-                <th>Customer</th>
-                <th>Date</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for order in orders[:10] %}
-            <tr>
-                <td>#{{ order.id }}</td>
-                <td>{{ order.shipping_name }}</td>
-                <td>{{ order.created_at|format_date }}</td>
-                <td style="font-weight: 600;">{{ order.total_amount|format_price }}</td>
-                <td><span class="badge badge-{{ order.status }}">{{ order.status|capitalize }}</span></td>
-                <td>
-                    <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.id) }}" style="display: flex; gap: 4px;">
-                        <select name="status" class="sort-select">
-                            <option value="pending" {{ 'selected' if order.status == 'pending' }}>Pending</option>
-                            <option value="confirmed" {{ 'selected' if order.status == 'confirmed' }}>Confirmed</option>
-                            <option value="shipped" {{ 'selected' if order.status == 'shipped' }}>Shipped</option>
-                            <option value="delivered" {{ 'selected' if order.status == 'delivered' }}>Delivered</option>
-                            <option value="cancelled" {{ 'selected' if order.status == 'cancelled' }}>Cancelled</option>
-                        </select>
-                        <button type="submit" class="btn btn-sm btn-outline">Update</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<!-- Quick Links -->
+<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px;">
+    {% for label, icon, url, color in [
+        ('Manage Products', 'fa-mobile-screen-button', url_for('admin.products'), '#667eea'),
+        ('All Orders', 'fa-shopping-cart', url_for('admin.orders'), '#f5576c'),
+        ('All Bookings', 'fa-calendar-check', url_for('admin.bookings'), '#43e97b'),
+        ('Customers', 'fa-users', url_for('admin.users'), '#4facfe'),
+        ('Services', 'fa-screwdriver-wrench', url_for('admin.services'), '#fa709a'),
+        ('Categories', 'fa-tags', url_for('admin.categories'), '#a18cd1'),
+    ] %}
+    <a href="{{ url }}" style="display:flex; align-items:center; gap:12px; background:#fff; border-radius:12px; padding:16px; text-decoration:none; color:#0B071E; box-shadow:0 2px 10px rgba(0,0,0,0.06); font-weight:700; font-size:13px; border-left:4px solid {{ color }}; transition:transform 0.15s;">
+        <i class="fas {{ icon }}" style="color:{{ color }}; font-size:18px; width:20px; text-align:center;"></i> {{ label }}
+    </a>
+    {% endfor %}
 </div>
+
 {% endblock %}
