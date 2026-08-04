@@ -50,16 +50,17 @@ img {
     display: block;
 }
 
-/* ===== NAVBAR (Floating Translucent Glass over Hero Video) ===== */
+/* ===== NAVBAR (Sticky Glass Bar) ===== */
 .navbar {
-    position: absolute;
+    position: sticky;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(15, 20, 42, 0.55);
+    background: #0B071E;
     backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 .nav-container {
