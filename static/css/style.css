@@ -74,9 +74,20 @@ img {
     gap: 16px;
 }
 
-.nav-logo {
-    display: flex;
-    align-items: center;
+.pill-nav-item {
+    transition: all 0.2s ease-in-out;
+}
+
+.pill-nav-item:hover,
+.pill-nav-item:focus {
+    background: #ffffff !important;
+    color: #0F0A24 !important;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.pill-nav-item:hover i,
+.pill-nav-item:focus i {
+    color: #EF5B25 !important;
 }
 
 .nav-search-mini {
