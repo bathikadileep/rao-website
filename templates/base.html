@@ -67,28 +67,52 @@
         </div>
     </nav>
 
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-header">
-            <div>
-                <span class="logo-nani">NANI</span>
-                <span class="logo-raos">RAO'S</span>
+    <div class="mobile-menu" id="mobileMenu" style="background: #0B071E; color: #ffffff; padding: 24px;">
+        <div class="mobile-menu-header" style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.15);">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <img src="{{ url_for('static', filename='images/rao_logo.svg') }}" alt="Rao's Logo" style="width: 36px; height: 36px;">
+                <span class="logo-raos" style="color: #ffffff; font-size: 20px; font-weight: 900;">RAO'S <span style="color: #EF5B25;">MOBILES</span></span>
             </div>
-            <button onclick="toggleMobileMenu()" class="mobile-close"><i class="fas fa-times"></i></button>
+            <button onclick="toggleMobileMenu()" class="mobile-close" style="background: none; border: none; font-size: 24px; color: #ffffff; cursor: pointer;"><i class="fas fa-times"></i></button>
         </div>
-        <a href="{{ url_for('shop.shop') }}">Shop Catalog</a>
-        <a href="{{ url_for('services.services') }}">Repair Services</a>
-        <a href="https://wa.me/917386738665" target="_blank" style="color: #25D366; font-weight: 700;">
-            <i class="fab fa-whatsapp"></i> WhatsApp: 7386738665
-        </a>
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
-            <a href="{{ url_for('cart.view_cart') }}">Cart</a>
-            <a href="{{ url_for('auth.profile') }}">Profile</a>
-            <a href="{{ url_for('auth.logout') }}">Logout</a>
-        {% else %}
-            <a href="{{ url_for('auth.login') }}">Login</a>
-            <a href="{{ url_for('auth.signup') }}">Sign Up</a>
-        {% endif %}
+
+        <div style="margin: 20px 0;">
+            <form action="{{ url_for('shop.shop') }}" method="GET" style="display: flex; align-items: center; position: relative;">
+                <i class="fas fa-search" style="position: absolute; left: 14px; color: rgba(255,255,255,0.6); font-size: 14px;"></i>
+                <input type="text" name="q" placeholder="Search smartphones, repair..." style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 40px; padding: 10px 42px 10px 38px; color: #ffffff; font-size: 14px; width: 100%; outline: none;">
+                <button type="submit" aria-label="Search" style="position: absolute; right: 6px; background: #EF5B25; border: none; color: #ffffff; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+            <a href="{{ url_for('index') }}" style="padding: 12px 16px; border-radius: 12px; font-size: 16px; font-weight: 700; color: #ffffff; text-decoration: none; display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.06);">
+                <i class="fas fa-home" style="color: #EF5B25; width: 24px;"></i> Home
+            </a>
+            <a href="{{ url_for('shop.shop') }}" style="padding: 12px 16px; border-radius: 12px; font-size: 16px; font-weight: 700; color: #ffffff; text-decoration: none; display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-mobile-screen-button" style="color: #EF5B25; width: 24px;"></i> Shop Catalog
+            </a>
+            <a href="{{ url_for('services.services') }}" style="padding: 12px 16px; border-radius: 12px; font-size: 16px; font-weight: 700; color: #ffffff; text-decoration: none; display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-screwdriver-wrench" style="color: #EF5B25; width: 24px;"></i> Repair Services
+            </a>
+            <a href="{{ url_for('shop.shop') }}?sort=price_low" style="padding: 12px 16px; border-radius: 12px; font-size: 16px; font-weight: 700; color: #ffffff; text-decoration: none; display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-fire" style="color: #FFD700; width: 24px;"></i> 🔥 Deals & Offers
+            </a>
+            <a href="https://wa.me/917386738665" target="_blank" style="padding: 12px 16px; border-radius: 12px; font-size: 16px; font-weight: 700; color: #25D366; text-decoration: none; display: flex; align-items: center; gap: 12px;">
+                <i class="fab fa-whatsapp" style="font-size: 20px; width: 24px;"></i> WhatsApp Support
+            </a>
+        </div>
+
+        <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.15); display: flex; gap: 12px;">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-outline" style="flex: 1; border-radius: 50px; justify-content: center; color: #ffffff; border-color: rgba(255,255,255,0.3);">Dashboard</a>
+                <a href="{{ url_for('cart.view_cart') }}" class="btn btn-primary" style="flex: 1; border-radius: 50px; background: #EF5B25; border-color: #EF5B25; justify-content: center;">Cart</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline" style="flex: 1; border-radius: 50px; justify-content: center; font-weight: 700; color: #ffffff; border-color: rgba(255,255,255,0.35);">Login</a>
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-primary" style="flex: 1; border-radius: 50px; background: #EF5B25; border-color: #EF5B25; justify-content: center; font-weight: 700; box-shadow: 0 4px 16px rgba(239,91,37,0.4);">Sign Up</a>
+            {% endif %}
+        </div>
     </div>
 
     {% with messages = get_flashed_messages(with_categories=true) %}

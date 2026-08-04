@@ -1419,84 +1419,112 @@ textarea.form-control {
     color: rgba(255, 255, 255, 0.85) !important;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    .nav-search { display: none; }
-    .nav-links { display: none; }
-    .mobile-menu-btn { display: block; }
-
-    .hero h1 { font-size: 32px; }
-    .hero p { font-size: 16px; }
-
-    .product-detail {
-        grid-template-columns: 1fr;
-        gap: 24px;
-        padding: 24px;
+/* ===== RESPONSIVE MOBILE STYLES ===== */
+@media (max-width: 992px) {
+    .pill-nav-container {
+        display: none !important;
     }
-
-    .product-detail-img { height: 300px; }
-
-    .form-row { grid-template-columns: 1fr; }
-
+    .mobile-menu-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.35) !important;
+        color: #ffffff !important;
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 50% !important;
+        font-size: 18px !important;
+        cursor: pointer !important;
+        margin-left: auto !important;
+    }
+    .nav-container {
+        height: 72px !important;
+        padding: 0 16px !important;
+    }
+    .hero-vibers {
+        padding: 100px 16px 50px !important;
+        min-height: auto !important;
+    }
+    .hero-vibers-title {
+        font-size: 32px !important;
+        line-height: 1.25 !important;
+        margin-bottom: 16px !important;
+    }
+    .hero-vibers-sub {
+        font-size: 14px !important;
+        margin-bottom: 24px !important;
+    }
+    .hero-badge-pill {
+        font-size: 10px !important;
+        padding: 5px 14px !important;
+        margin-bottom: 16px !important;
+    }
+    .trust-badges-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        padding: 0 12px !important;
+    }
+    .trust-badge-card {
+        padding: 12px 14px !important;
+        border-radius: 10px !important;
+    }
+    .trust-badge-title {
+        font-size: 12px !important;
+    }
+    .trust-badge-sub {
+        font-size: 10.5px !important;
+    }
     .footer-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 32px;
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+        text-align: center !important;
     }
-
-    .admin-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .admin-sidebar {
-        display: none;
-    }
-
-    .admin-content {
-        padding: 16px;
-    }
-
-    .cart-item {
+    .footer-col {
+        display: flex;
         flex-direction: column;
-        text-align: center;
+        align-items: center;
     }
-
-    .cart-item-actions {
-        flex-direction: column;
+    .section-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
     }
-
     .section-title {
-        font-size: 22px;
-    }
-
-    .filter-bar {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .filter-tabs {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-    }
-
-    .table-wrapper {
-        overflow-x: auto;
+        font-size: 24px !important;
     }
 }
 
-@media (max-width: 480px) {
-    .hero { padding: 48px 16px; }
-    .hero h1 { font-size: 26px; }
-    .hero-actions { flex-direction: column; align-items: center; }
-
-    .product-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
+@media (max-width: 576px) {
+    .trust-badges-grid {
+        grid-template-columns: 1fr !important;
     }
-
-    .product-card-img { height: 160px; }
-    .product-card-body { padding: 12px; }
-    .product-card-name { font-size: 13px; }
-    .price-current { font-size: 15px; }
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+    .product-card-img {
+        height: 150px !important;
+    }
+    .product-card-body {
+        padding: 12px !important;
+    }
+    .product-card-name {
+        font-size: 13px !important;
+    }
+    .price-current {
+        font-size: 15px !important;
+    }
+    .hero-vibers-title {
+        font-size: 28px !important;
+    }
+    .btn-vibers-primary, .btn-vibers-outline {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 12px 20px !important;
+        font-size: 14px !important;
+    }
+}
 
 /* --- GlobalTechVibers Inspired Pill Navbar & Hero --- */
 .pill-nav-container {
