@@ -57,14 +57,23 @@ def add_cache_headers(response):
 
 
 @app.route('/')
-@app.route('/location')
 def index():
     from flask import render_template
     from models import Product, Category, Service
     featured = Product.query.filter_by(is_featured=True, is_active=True).limit(8).all()
     categories = Category.query.all()
     services = Service.query.filter_by(is_active=True).limit(4).all()
-    return render_template('index.html', featured=featured, categories=categories, services=services)
+    return render_template('index.html', featured=featured, categories=categories, services=services, is_location_page=False)
+
+
+@app.route('/location')
+def location_page():
+    from flask import render_template
+    from models import Product, Category, Service
+    featured = Product.query.filter_by(is_featured=True, is_active=True).limit(8).all()
+    categories = Category.query.all()
+    services = Service.query.filter_by(is_active=True).limit(4).all()
+    return render_template('index.html', featured=featured, categories=categories, services=services, is_location_page=True)
 
 
 @app.template_filter('format_price')
