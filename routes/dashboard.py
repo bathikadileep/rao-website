@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
-from models import Order, ServiceBooking
+from models import Order, ServiceBooking, WishlistItem
 
 dashboard_bp = Blueprint('dashboard', __name__)
 
@@ -10,7 +10,7 @@ dashboard_bp = Blueprint('dashboard', __name__)
 def dashboard():
     orders = Order.query.filter_by(user_id=current_user.id).order_by(Order.created_at.desc()).all()
     bookings = ServiceBooking.query.filter_by(user_id=current_user.id).order_by(ServiceBooking.created_at.desc()).all()
-    total_spent = sum(o.total_amount for o in orders if o.status != 'cancelled')
+    total_spent = sum(o.total_amount for o in orders if o.status not in ('cancelled',))
     return render_template('dashboard/index.html',
                            orders=orders,
                            bookings=bookings,

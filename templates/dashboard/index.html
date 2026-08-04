@@ -1,109 +1,173 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}My Dashboard – Rao's Mobiles{% endblock %}
 {% block content %}
-<div class="dashboard-page">
-    <div class="dashboard-header">
-        <h1>Hello, {{ current_user.full_name or current_user.username }}!</h1>
-        <p>Here's what's happening with your account.</p>
-    </div>
 
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-card-label">Total Orders</div>
-            <div class="stat-card-value">{{ orders|length }}</div>
+<div style="background: linear-gradient(135deg, #0B071E 0%, #1a0f3c 100%); min-height: 100vh; padding: 0;">
+
+    <!-- Dashboard Header Banner -->
+    <div style="background: linear-gradient(135deg, #0B071E, #2d1b6b); padding: 40px 32px 32px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 18px;">
+                <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #EF5B25, #ff8a65); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 900; color: #fff; flex-shrink: 0; box-shadow: 0 4px 20px rgba(239,91,37,0.4);">
+                    {{ (current_user.full_name or current_user.username)[0]|upper }}
+                </div>
+                <div>
+                    <h1 style="margin: 0; font-size: 26px; font-weight: 900; color: #ffffff;">Welcome, {{ current_user.full_name or current_user.username }}! 👋</h1>
+                    <p style="margin: 4px 0 0; color: rgba(255,255,255,0.6); font-size: 14px;">{{ current_user.email }} · Member since {{ current_user.created_at.strftime('%b %Y') }}</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="{{ url_for('shop.shop') }}" style="background: #EF5B25; color: #fff; border-radius: 50px; padding: 10px 22px; font-weight: 700; font-size: 13px; text-decoration: none; box-shadow: 0 4px 14px rgba(239,91,37,0.4);">
+                    <i class="fas fa-shopping-bag"></i> Shop Now
+                </a>
+                <a href="{{ url_for('services.services') }}" style="background: rgba(255,255,255,0.12); color: #fff; border-radius: 50px; padding: 10px 22px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="fas fa-screwdriver-wrench"></i> Book Repair
+                </a>
+                <a href="{{ url_for('auth.logout') }}" style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); border-radius: 50px; padding: 10px 18px; font-weight: 700; font-size: 13px; text-decoration: none; border: 1px solid rgba(255,255,255,0.12);">
+                    <i class="fas fa-right-from-bracket"></i> Logout
+                </a>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-card-label">Total Spent</div>
-            <div class="stat-card-value stat-card-accent">{{ total_spent|format_price }}</div>
+    </div>
+
+    <!-- Main Dashboard Content -->
+    <div style="max-width: 1200px; margin: 0 auto; padding: 32px 24px;">
+
+        <!-- KPI Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
+
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 16px; padding: 22px; color: #fff;">
+                <div style="font-size: 32px; font-weight: 900; margin-bottom: 4px;">{{ orders|length }}</div>
+                <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85;">Total Orders</div>
+                <i class="fas fa-shopping-bag" style="float: right; font-size: 28px; opacity: 0.15; margin-top: -42px;"></i>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 16px; padding: 22px; color: #fff;">
+                <div style="font-size: 28px; font-weight: 900; margin-bottom: 4px;">₹{{ '{:,.0f}'.format(total_spent) }}</div>
+                <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85;">Total Spent</div>
+                <i class="fas fa-indian-rupee-sign" style="float: right; font-size: 28px; opacity: 0.15; margin-top: -42px;"></i>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #43e97b, #38f9d7); border-radius: 16px; padding: 22px; color: #fff;">
+                <div style="font-size: 32px; font-weight: 900; margin-bottom: 4px;">{{ bookings|length }}</div>
+                <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85;">Repair Bookings</div>
+                <i class="fas fa-screwdriver-wrench" style="float: right; font-size: 28px; opacity: 0.15; margin-top: -42px;"></i>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #fa709a, #fee140); border-radius: 16px; padding: 22px; color: #fff;">
+                <div style="font-size: 32px; font-weight: 900; margin-bottom: 4px;">{{ current_user.wishlist_items|length }}</div>
+                <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85;">Wishlist Items</div>
+                <i class="fas fa-heart" style="float: right; font-size: 28px; opacity: 0.15; margin-top: -42px;"></i>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); border-radius: 16px; padding: 22px; color: #fff;">
+                <div style="font-size: 32px; font-weight: 900; margin-bottom: 4px;">{{ current_user.cart_items|length }}</div>
+                <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85;">Items in Cart</div>
+                <i class="fas fa-cart-shopping" style="float: right; font-size: 28px; opacity: 0.15; margin-top: -42px;"></i>
+            </div>
+
         </div>
-        <div class="stat-card">
-            <div class="stat-card-label">Member Since</div>
-            <div class="stat-card-value" style="font-size: 20px;">{{ current_user.created_at|format_date }}</div>
+
+        <!-- Quick Actions -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 32px;">
+            {% for label, icon, url, color in [
+                ('My Orders', 'fa-box', url_for('dashboard.orders'), '#667eea'),
+                ('My Bookings', 'fa-calendar-check', url_for('dashboard.service_bookings'), '#43e97b'),
+                ('My Wishlist', 'fa-heart', url_for('wishlist.view_wishlist'), '#f5576c'),
+                ('My Cart', 'fa-shopping-cart', url_for('cart.view_cart'), '#4facfe'),
+                ('Shop Catalog', 'fa-mobile-screen-button', url_for('shop.shop'), '#EF5B25'),
+                ('Book Repair', 'fa-screwdriver-wrench', url_for('services.services'), '#fa709a'),
+            ] %}
+            <a href="{{ url }}" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 18px 16px; text-decoration: none; color: #ffffff; display: flex; flex-direction: column; align-items: center; gap: 10px; font-weight: 700; font-size: 13px; text-align: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: {{ color }}22; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas {{ icon }}" style="color: {{ color }}; font-size: 18px;"></i>
+                </div>
+                {{ label }}
+            </a>
+            {% endfor %}
         </div>
-        <div class="stat-card">
-            <div class="stat-card-label">Cart Items</div>
-            <div class="stat-card-value">{{ current_user.cart_items|length }}</div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; flex-wrap: wrap;">
+
+            <!-- Recent Orders -->
+            <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden;">
+                <div style="padding: 20px 24px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                    <h2 style="margin: 0; font-size: 16px; font-weight: 800; color: #ffffff;"><i class="fas fa-box" style="color: #667eea; margin-right: 8px;"></i>My Orders</h2>
+                    <a href="{{ url_for('dashboard.orders') }}" style="font-size: 12px; font-weight: 700; color: #667eea; text-decoration: none;">View All →</a>
+                </div>
+                {% if orders %}
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        {% for order in orders[:5] %}
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+                            <td style="padding: 12px 16px; font-weight: 800; color: #ffffff;">#{{ order.id }}</td>
+                            <td style="padding: 12px 16px; color: rgba(255,255,255,0.6); font-size: 12px;">{{ order.created_at.strftime('%d %b %Y') }}</td>
+                            <td style="padding: 12px 16px; font-weight: 700; color: #EF5B25;">₹{{ '{:,.0f}'.format(order.total_amount) }}</td>
+                            <td style="padding: 12px 16px;">
+                                {% set sc = {'pending':'#F59E0B','confirmed':'#3B82F6','shipped':'#8B5CF6','delivered':'#10B981','cancelled':'#EF4444'} %}
+                                <span style="background: {{ sc.get(order.status,'#6B7280') }}25; color: {{ sc.get(order.status,'#6B7280') }}; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 800;">{{ order.status|capitalize }}</span>
+                            </td>
+                            <td style="padding: 12px 16px;">
+                                <a href="{{ url_for('dashboard.order_detail', order_id=order.id) }}" style="font-size: 11px; color: #667eea; font-weight: 700; text-decoration: none;">Details →</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {% else %}
+                <div style="padding: 40px; text-align: center; color: rgba(255,255,255,0.4);">
+                    <i class="fas fa-box-open" style="font-size: 32px; margin-bottom: 12px; display: block;"></i>
+                    <p style="margin: 0 0 16px; font-size: 14px;">No orders yet</p>
+                    <a href="{{ url_for('shop.shop') }}" style="background: #EF5B25; color: #fff; border-radius: 50px; padding: 10px 24px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-block;">Browse Products</a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Recent Bookings -->
+            <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; overflow: hidden;">
+                <div style="padding: 20px 24px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                    <h2 style="margin: 0; font-size: 16px; font-weight: 800; color: #ffffff;"><i class="fas fa-screwdriver-wrench" style="color: #43e97b; margin-right: 8px;"></i>Repair Bookings</h2>
+                    <a href="{{ url_for('dashboard.service_bookings') }}" style="font-size: 12px; font-weight: 700; color: #43e97b; text-decoration: none;">View All →</a>
+                </div>
+                {% if bookings %}
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                        {% for b in bookings[:5] %}
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">
+                            <td style="padding: 12px 16px; font-weight: 700; color: #ffffff; font-size: 12px;">{{ b.service.name }}</td>
+                            <td style="padding: 12px 16px; color: rgba(255,255,255,0.6); font-size: 12px;">{{ b.phone_model }}</td>
+                            <td style="padding: 12px 16px; color: rgba(255,255,255,0.5); font-size: 11px;">{{ b.booking_date.strftime('%d %b %Y') }}</td>
+                            <td style="padding: 12px 16px;">
+                                {% set bs = {'pending':'#F59E0B','confirmed':'#3B82F6','completed':'#10B981','cancelled':'#EF4444'} %}
+                                <span style="background: {{ bs.get(b.status,'#6B7280') }}25; color: {{ bs.get(b.status,'#6B7280') }}; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 800;">{{ b.status|capitalize }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {% else %}
+                <div style="padding: 40px; text-align: center; color: rgba(255,255,255,0.4);">
+                    <i class="fas fa-calendar-xmark" style="font-size: 32px; margin-bottom: 12px; display: block;"></i>
+                    <p style="margin: 0 0 16px; font-size: 14px;">No bookings yet</p>
+                    <a href="{{ url_for('services.services') }}" style="background: #43e97b; color: #0B071E; border-radius: 50px; padding: 10px 24px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-block;">Book a Repair</a>
+                </div>
+                {% endif %}
+            </div>
+
         </div>
-    </div>
 
-    <div class="section-header">
-        <h2 class="section-title" style="font-size: 22px;">Recent Orders</h2>
-        <a href="{{ url_for('dashboard.orders') }}" class="btn btn-outline btn-sm">View All</a>
-    </div>
+        <!-- Contact Admin via WhatsApp -->
+        <div style="margin-top: 24px; background: linear-gradient(135deg, #25D366, #128C7E); border-radius: 16px; padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <h3 style="margin: 0 0 6px; color: #fff; font-size: 18px; font-weight: 800;"><i class="fab fa-whatsapp" style="margin-right: 8px;"></i>Need Help? Contact Us on WhatsApp</h3>
+                <p style="margin: 0; color: rgba(255,255,255,0.85); font-size: 14px;">Chat directly with Rao's Mobiles team for support, order updates & repair queries.</p>
+            </div>
+            <a href="https://wa.me/917386738665?text=Hi%20Rao's%20Mobiles%2C%20I%20need%20help%20with%20my%20account." target="_blank"
+               style="background: #fff; color: #128C7E; border-radius: 50px; padding: 12px 28px; font-weight: 800; font-size: 14px; text-decoration: none; white-space: nowrap; flex-shrink: 0; box-shadow: 0 4px 14px rgba(0,0,0,0.2);">
+                Chat Now →
+            </a>
+        </div>
 
-    {% if orders %}
-    <div class="table-wrapper">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Order #</th>
-                    <th>Date</th>
-                    <th>Items</th>
-                    <th>Total</th>
-                    <th>Status</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders[:5] %}
-                <tr>
-                    <td>#{{ order.id }}</td>
-                    <td>{{ order.created_at|format_date }}</td>
-                    <td>{{ order.items|length }}</td>
-                    <td style="font-weight: 600;">{{ order.total_amount|format_price }}</td>
-                    <td><span class="badge badge-{{ order.status }}">{{ order.status|capitalize }}</span></td>
-                    <td><a href="{{ url_for('dashboard.order_detail', order_id=order.id) }}" class="btn btn-sm btn-outline">Details</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
-    {% else %}
-    <div class="empty-state">
-        <i class="fas fa-box-open"></i>
-        <h3>No orders yet</h3>
-        <p>Start shopping to see your orders here.</p>
-        <a href="{{ url_for('shop.shop') }}" class="btn btn-primary">Browse Products</a>
-    </div>
-    {% endif %}
-
-    <div class="section-header" style="margin-top: 48px;">
-        <h2 class="section-title" style="font-size: 22px;">Service Bookings</h2>
-        <a href="{{ url_for('dashboard.service_bookings') }}" class="btn btn-outline btn-sm">View All</a>
-    </div>
-
-    {% if bookings %}
-    <div class="table-wrapper">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Booking #</th>
-                    <th>Service</th>
-                    <th>Phone</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for booking in bookings[:5] %}
-                <tr>
-                    <td>#{{ booking.id }}</td>
-                    <td style="font-weight: 600;">{{ booking.service.name }}</td>
-                    <td>{{ booking.phone_model }}</td>
-                    <td>{{ booking.booking_date|format_date }}</td>
-                    <td><span class="badge badge-{{ booking.status }}">{{ booking.status|capitalize }}</span></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <div class="empty-state">
-        <i class="fas fa-calendar-check"></i>
-        <h3>No service bookings</h3>
-        <p>Book a mobile repair service here.</p>
-        <a href="{{ url_for('services.services') }}" class="btn btn-outline">Book a Service</a>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}
