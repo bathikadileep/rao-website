@@ -1,5 +1,8 @@
 import stripe
-import razorpay
+try:
+    import razorpay
+except ImportError:
+    razorpay = None
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, jsonify
 from flask_login import login_required, current_user
 from models import db, CartItem, Order, OrderItem

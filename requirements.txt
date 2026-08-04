@@ -7,3 +7,6 @@ stripe==15.4.0
 Werkzeug==3.1.8
 gunicorn==23.0.0
 python-dotenv==1.0.1
+razorpay==1.4.1
+pandas==2.2.3
+kagglehub==0.3.12
