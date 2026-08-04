@@ -136,30 +136,37 @@
 </section>
 {% endif %}
 
-<section class="section" style="background: var(--bg-soft);">
-    <div class="container" style="text-align: center;">
-        <h2 class="section-title" style="margin-bottom: 12px;">Why Choose Nani Rao's Mobile Accessories?</h2>
-        <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 40px;">Original products, certified technicians, and top customer satisfaction in Narasaraopet.</p>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div style="font-size: 28px; color: var(--accent); margin-bottom: 12px;"><i class="fas fa-shield-halved"></i></div>
-                <div class="stat-card-label">100% Original</div>
-                <div style="font-size: 14px; color: var(--text-secondary);">Genuine phones, cases & display combos</div>
+<section class="section" style="position: relative; overflow: hidden; padding: 80px 0; color: #ffffff; margin: 40px 0;">
+    <!-- Background Video video_2.mp4 -->
+    <video autoplay loop muted playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; filter: brightness(0.95) contrast(1.05);">
+        <source src="{{ url_for('static', filename='videos/video_2.mp4') }}" type="video/mp4">
+    </video>
+    <!-- Overlay for text clarity with reduced opacity -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 6, 25, 0.35); z-index: 2;"></div>
+
+    <div class="container" style="position: relative; z-index: 10; text-align: center;">
+        <h2 class="section-title" style="color: #ffffff; font-size: 36px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 12px; text-shadow: 0 4px 16px rgba(0,0,0,0.8);">Why Choose Nani Rao's Mobile Accessories?</h2>
+        <p style="color: rgba(255, 255, 255, 0.9); font-size: 16px; font-weight: 600; max-width: 650px; margin: 0 auto 40px; text-shadow: 0 2px 8px rgba(0,0,0,0.8);">Original products, certified technicians, and top customer satisfaction in Narasaraopet.</p>
+        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+            <div class="stat-card" style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 16px; padding: 28px 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+                <div style="font-size: 32px; color: #FF7034; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(255,112,52,0.4));"><i class="fas fa-shield-alt"></i></div>
+                <div class="stat-card-label" style="color: #ffffff; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">100% Original</div>
+                <div style="font-size: 13.5px; color: rgba(255,255,255,0.85); font-weight: 600;">Genuine phones, cases & display combos</div>
             </div>
-            <div class="stat-card">
-                <div style="font-size: 28px; color: var(--accent); margin-bottom: 12px;"><i class="fas fa-award"></i></div>
-                <div class="stat-card-label">Best Quality</div>
-                <div style="font-size: 14px; color: var(--text-secondary);">Grade-A accessories & screen guards</div>
+            <div class="stat-card" style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 16px; padding: 28px 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+                <div style="font-size: 32px; color: #ffffff; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(255,255,255,0.4));"><i class="fas fa-award"></i></div>
+                <div class="stat-card-label" style="color: #ffffff; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Best Quality</div>
+                <div style="font-size: 13.5px; color: rgba(255,255,255,0.85); font-weight: 600;">Grade-A accessories & screen guards</div>
             </div>
-            <div class="stat-card">
-                <div style="font-size: 28px; color: var(--accent); margin-bottom: 12px;"><i class="fas fa-screwdriver-wrench"></i></div>
-                <div class="stat-card-label">Expert Service</div>
-                <div style="font-size: 14px; color: var(--text-secondary);">Fast chip-level mobile repair</div>
+            <div class="stat-card" style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 16px; padding: 28px 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+                <div style="font-size: 32px; color: #25D366; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(37,211,102,0.4));"><i class="fas fa-screwdriver-wrench"></i></div>
+                <div class="stat-card-label" style="color: #ffffff; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Expert Service</div>
+                <div style="font-size: 13.5px; color: rgba(255,255,255,0.85); font-weight: 600;">Fast chip-level mobile repair</div>
             </div>
-            <div class="stat-card">
-                <div style="font-size: 28px; color: var(--accent); margin-bottom: 12px;"><i class="fab fa-whatsapp"></i></div>
-                <div class="stat-card-label">Instant Support</div>
-                <div style="font-size: 14px; color: var(--text-secondary);">WhatsApp direct care on 7386738665</div>
+            <div class="stat-card" style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 16px; padding: 28px 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+                <div style="font-size: 32px; color: #FFD700; margin-bottom: 12px; filter: drop-shadow(0 4px 12px rgba(255,215,0,0.4));"><i class="fab fa-whatsapp"></i></div>
+                <div class="stat-card-label" style="color: #ffffff; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Instant Support</div>
+                <div style="font-size: 13.5px; color: rgba(255,255,255,0.85); font-weight: 600;">WhatsApp direct care on 7386738665</div>
             </div>
         </div>
     </div>
