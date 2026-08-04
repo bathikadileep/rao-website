@@ -57,11 +57,6 @@
                                 <i class="fas fa-right-from-bracket"></i> Logout
                             </a>
                         {% else %}
-                            <!-- Customer: Wishlist -->
-                            <a href="{{ url_for('wishlist.view_wishlist') }}" class="pill-nav-item {{ 'active' if request.path == '/wishlist' }}" title="Wishlist" style="position: relative;">
-                                <i class="fas fa-heart"></i>
-                                <span id="wishlist-count" style="display:none; position:absolute; top:-4px; right:-4px; background:#EF5B25; color:#fff; font-size:10px; font-weight:800; min-width:17px; height:17px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">0</span>
-                            </a>
                             <!-- Customer: Cart -->
                             <a href="{{ url_for('cart.view_cart') }}" class="pill-nav-item {{ 'active' if request.path == '/cart' }}" title="Cart" style="position: relative;">
                                 <i class="fas fa-shopping-bag"></i>
@@ -135,7 +130,6 @@
                     </div>
                 {% else %}
                     <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <a href="{{ url_for('wishlist.view_wishlist') }}" class="btn btn-outline" style="flex: 1; border-radius: 50px; justify-content: center; color: #EF5B25; border-color: rgba(239,91,37,0.5);"><i class="fas fa-heart"></i> Wishlist</a>
                         <a href="{{ url_for('cart.view_cart') }}" class="btn btn-primary" style="flex: 1; border-radius: 50px; background: #EF5B25; border-color: #EF5B25; justify-content: center;"><i class="fas fa-shopping-bag"></i> Cart</a>
                     </div>
                     <div style="display: flex; gap: 10px;">
@@ -282,7 +276,6 @@
     }
     function loadCounts() {
         fetch('/cart/count').then(function(r){ return r.json(); }).then(function(d){ updateBadge('cart-count', d.count || 0); }).catch(function(){});
-        fetch('/wishlist/count').then(function(r){ return r.json(); }).then(function(d){ updateBadge('wishlist-count', d.count || 0); }).catch(function(){});
     }
     document.addEventListener('DOMContentLoaded', loadCounts);
     </script>
