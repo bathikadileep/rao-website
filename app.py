@@ -46,6 +46,16 @@ app.register_blueprint(services_bp)
 app.register_blueprint(api_bp, url_prefix='/api')
 
 
+from flask import request
+
+@app.after_request
+def add_cache_headers(response):
+    if request.path.startswith('/static/'):
+        response.headers['Cache-Control'] = 'public, max-age=31536000'
+        response.headers['Accept-Ranges'] = 'bytes'
+    return response
+
+
 @app.route('/')
 def index():
     from flask import render_template

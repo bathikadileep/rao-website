@@ -224,3 +224,23 @@
     </div>
 </section>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const bgVideos = document.querySelectorAll('video');
+    bgVideos.forEach(function(video) {
+        video.muted = true;
+        video.playsInline = true;
+        var promise = video.play();
+        if (promise !== undefined) {
+            promise.catch(function(err) {
+                console.log('Autoplay started on user interaction:', err);
+                document.addEventListener('touchstart', function() { video.play(); }, { once: true });
+                document.addEventListener('click', function() { video.play(); }, { once: true });
+            });
+        }
+    });
+});
+</script>
+{% endblock %}
