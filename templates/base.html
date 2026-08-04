@@ -45,18 +45,40 @@
                     </button>
                 </form>
 
-                <!-- Login & Sign Up Buttons directly inside Pill Field -->
-                <div style="display: flex; align-items: center; gap: 6px;">
+                <!-- Right Action Buttons -->
+                <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
                     {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('cart.view_cart') }}" class="pill-nav-item" style="color: #ffffff; padding: 9px 16px; font-size: 14.5px;">
-                            <i class="fas fa-shopping-bag"></i> <span class="cart-badge" id="cart-count">0</span>
-                        </a>
-                        <a href="{{ url_for('dashboard.dashboard') }}" class="pill-nav-item" style="background: rgba(255,255,255,0.25); color: #ffffff; padding: 9px 20px; border-radius: 40px; font-weight: 700; white-space: nowrap;">
-                            <i class="fas fa-user-circle"></i> {{ current_user.username }}
-                        </a>
+                        {% if current_user.is_admin %}
+                            <!-- Admin Buttons -->
+                            <a href="{{ url_for('admin.dashboard') }}" class="pill-nav-item" style="background: rgba(239,91,37,0.18); color: #EF5B25; font-weight: 800;" title="Admin Panel">
+                                <i class="fas fa-shield-halved"></i> Admin
+                            </a>
+                            <a href="{{ url_for('auth.logout') }}" class="pill-nav-item" style="background: rgba(255,255,255,0.12); color: #ffffff;" title="Logout">
+                                <i class="fas fa-right-from-bracket"></i> Logout
+                            </a>
+                        {% else %}
+                            <!-- Customer: Wishlist -->
+                            <a href="{{ url_for('wishlist.view_wishlist') }}" class="pill-nav-item {{ 'active' if request.path == '/wishlist' }}" title="Wishlist" style="position: relative;">
+                                <i class="fas fa-heart"></i>
+                                <span id="wishlist-count" style="display:none; position:absolute; top:-4px; right:-4px; background:#EF5B25; color:#fff; font-size:10px; font-weight:800; min-width:17px; height:17px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">0</span>
+                            </a>
+                            <!-- Customer: Cart -->
+                            <a href="{{ url_for('cart.view_cart') }}" class="pill-nav-item {{ 'active' if request.path == '/cart' }}" title="Cart" style="position: relative;">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span id="cart-count" style="display:none; position:absolute; top:-4px; right:-4px; background:#EF5B25; color:#fff; font-size:10px; font-weight:800; min-width:17px; height:17px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">0</span>
+                            </a>
+                            <!-- Customer: Account -->
+                            <a href="{{ url_for('dashboard.dashboard') }}" class="pill-nav-item" style="background: rgba(255,255,255,0.2); color: #ffffff; padding: 0 14px;" title="My Account">
+                                <i class="fas fa-user-circle"></i> <span style="max-width:80px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ current_user.username }}</span>
+                            </a>
+                            <!-- Customer: Logout -->
+                            <a href="{{ url_for('auth.logout') }}" class="pill-nav-item" style="background: rgba(255,255,255,0.12); color: #ffffff;" title="Logout">
+                                <i class="fas fa-right-from-bracket"></i>
+                            </a>
+                        {% endif %}
                     {% else %}
-                        <a href="{{ url_for('auth.login') }}" class="pill-nav-item {{ 'active' if request.endpoint == 'auth.login' }}" style="padding: 9px 20px; border-radius: 40px; font-size: 14.5px; font-weight: 700; text-decoration: none; white-space: nowrap; {{ 'background: #ffffff; color: #0F0A24;' if request.endpoint == 'auth.login' else 'color: #ffffff;' }}">Login</a>
-                        <a href="{{ url_for('auth.signup') }}" class="btn btn-primary btn-sm" style="border-radius: 50px; background: #EF5B25; border-color: #EF5B25; color: #ffffff; font-weight: 700; padding: 9px 22px; font-size: 14.5px; white-space: nowrap; box-shadow: 0 4px 14px rgba(239,91,37,0.45);">Sign Up</a>
+                        <a href="{{ url_for('auth.login') }}" class="pill-nav-item {{ 'active' if request.endpoint == 'auth.login' }}" style="padding: 0 20px; font-weight: 700;">Login</a>
+                        <a href="{{ url_for('auth.signup') }}" style="display:inline-flex; align-items:center; height:38px; padding: 0 22px; border-radius: 50px; background: #EF5B25; color: #ffffff; font-weight: 700; font-size: 14px; text-decoration: none; white-space:nowrap; box-shadow: 0 4px 14px rgba(239,91,37,0.45);">Sign Up</a>
                     {% endif %}
                 </div>
             </div>
@@ -104,13 +126,28 @@
             </a>
         </div>
 
-        <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.15); display: flex; gap: 12px;">
+        <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.15);">
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-outline" style="flex: 1; border-radius: 50px; justify-content: center; color: #ffffff; border-color: rgba(255,255,255,0.3);">Dashboard</a>
-                <a href="{{ url_for('cart.view_cart') }}" class="btn btn-primary" style="flex: 1; border-radius: 50px; background: #EF5B25; border-color: #EF5B25; justify-content: center;">Cart</a>
+                {% if current_user.is_admin %}
+                    <div style="display: flex; gap: 10px;">
+                        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-primary" style="flex: 1; border-radius: 50px; background: #EF5B25; border-color: #EF5B25; justify-content: center; font-weight: 700;"><i class="fas fa-shield-halved"></i> Admin Panel</a>
+                        <a href="{{ url_for('auth.logout') }}" class="btn btn-outline" style="flex: 1; border-radius: 50px; justify-content: center; color: #ffffff; border-color: rgba(255,255,255,0.3);"><i class="fas fa-right-from-bracket"></i> Logout</a>
+                    </div>
+                {% else %}
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <a href="{{ url_for('wishlist.view_wishlist') }}" class="btn btn-outline" style="flex: 1; border-radius: 50px; justify-content: center; color: #EF5B25; border-color: rgba(239,91,37,0.5);"><i class="fas fa-heart"></i> Wishlist</a>
+                        <a href="{{ url_for('cart.view_cart') }}" class="btn btn-primary" style="flex: 1; border-radius: 50px; background: #EF5B25; border-color: #EF5B25; justify-content: center;"><i class="fas fa-shopping-bag"></i> Cart</a>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-outline" style="flex: 1; border-radius: 50px; justify-content: center; color: #ffffff; border-color: rgba(255,255,255,0.3);"><i class="fas fa-user-circle"></i> Account</a>
+                        <a href="{{ url_for('auth.logout') }}" class="btn btn-outline" style="flex: 1; border-radius: 50px; justify-content: center; color: #ffffff; border-color: rgba(255,255,255,0.3);"><i class="fas fa-right-from-bracket"></i> Logout</a>
+                    </div>
+                {% endif %}
             {% else %}
-                <a href="{{ url_for('auth.login') }}" class="btn btn-outline" style="flex: 1; border-radius: 50px; justify-content: center; font-weight: 700; color: #ffffff; border-color: rgba(255,255,255,0.35);">Login</a>
-                <a href="{{ url_for('auth.signup') }}" class="btn btn-primary" style="flex: 1; border-radius: 50px; background: #EF5B25; border-color: #EF5B25; justify-content: center; font-weight: 700; box-shadow: 0 4px 16px rgba(239,91,37,0.4);">Sign Up</a>
+                <div style="display: flex; gap: 12px;">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline" style="flex: 1; border-radius: 50px; justify-content: center; font-weight: 700; color: #ffffff; border-color: rgba(255,255,255,0.35);">Login</a>
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-primary" style="flex: 1; border-radius: 50px; background: #EF5B25; border-color: #EF5B25; justify-content: center; font-weight: 700; box-shadow: 0 4px 16px rgba(239,91,37,0.4);">Sign Up</a>
+                </div>
             {% endif %}
         </div>
     </div>
@@ -231,6 +268,25 @@
     </a>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% if current_user.is_authenticated and not current_user.is_admin %}
+    <script>
+    function updateBadge(id, count) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (count > 0) {
+            el.textContent = count > 99 ? '99+' : count;
+            el.style.display = 'flex';
+        } else {
+            el.style.display = 'none';
+        }
+    }
+    function loadCounts() {
+        fetch('/cart/count').then(function(r){ return r.json(); }).then(function(d){ updateBadge('cart-count', d.count || 0); }).catch(function(){});
+        fetch('/wishlist/count').then(function(r){ return r.json(); }).then(function(d){ updateBadge('wishlist-count', d.count || 0); }).catch(function(){});
+    }
+    document.addEventListener('DOMContentLoaded', loadCounts);
+    </script>
+    {% endif %}
     {% block extra_js %}{% endblock %}
 </body>
 </html>

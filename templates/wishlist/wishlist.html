@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}My Wishlist – RAO'S MOBILES{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 40px 24px;">
+
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 36px;">
+        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #EF5B25, #ff8c5a); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-heart" style="color: #fff; font-size: 22px;"></i>
+        </div>
+        <div>
+            <h1 style="margin: 0; font-size: 28px; font-weight: 900; color: #0B071E;">My Wishlist</h1>
+            <p style="margin: 2px 0 0; color: #6B7280; font-size: 14px;">{{ items|length }} item{{ 's' if items|length != 1 }}</p>
+        </div>
+    </div>
+
+    {% if items %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;">
+        {% for item in items %}
+        <div style="background: #ffffff; border-radius: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 36px rgba(0,0,0,0.14)';" onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 24px rgba(0,0,0,0.08)';">
+            <div style="position: relative;">
+                <a href="{{ url_for('shop.product_detail', slug=item.product.slug) }}">
+                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}"
+                         style="width: 100%; height: 200px; object-fit: cover; display: block;"
+                         onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+                </a>
+                {% if item.product.discount_price %}
+                <span style="position: absolute; top: 12px; left: 12px; background: #EF5B25; color: #fff; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px;">
+                    SALE
+                </span>
+                {% endif %}
+                <!-- Remove from Wishlist -->
+                <form method="POST" action="{{ url_for('wishlist.remove_wishlist', item_id=item.id) }}" style="position: absolute; top: 12px; right: 12px;">
+                    <button type="submit" title="Remove from Wishlist"
+                        style="background: rgba(255,255,255,0.95); border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: background 0.2s;"
+                        onmouseover="this.style.background='#fee2e2'" onmouseout="this.style.background='rgba(255,255,255,0.95)'">
+                        <i class="fas fa-heart" style="color: #EF5B25; font-size: 15px;"></i>
+                    </button>
+                </form>
+            </div>
+            <div style="padding: 18px;">
+                <a href="{{ url_for('shop.product_detail', slug=item.product.slug) }}" style="text-decoration: none; color: inherit;">
+                    <h3 style="margin: 0 0 8px; font-size: 15px; font-weight: 700; color: #0B071E; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ item.product.name }}</h3>
+                </a>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+                    {% if item.product.discount_price %}
+                    <span style="font-size: 18px; font-weight: 900; color: #EF5B25;">₹{{ '{:,.0f}'.format(item.product.discount_price) }}</span>
+                    <span style="font-size: 13px; color: #9CA3AF; text-decoration: line-through;">₹{{ '{:,.0f}'.format(item.product.price) }}</span>
+                    {% else %}
+                    <span style="font-size: 18px; font-weight: 900; color: #0B071E;">₹{{ '{:,.0f}'.format(item.product.price) }}</span>
+                    {% endif %}
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <a href="{{ url_for('shop.product_detail', slug=item.product.slug) }}"
+                       style="flex: 1; background: #0B071E; color: #fff; border: none; border-radius: 10px; padding: 10px 0; font-weight: 700; font-size: 13px; text-align: center; text-decoration: none; transition: background 0.2s;"
+                       onmouseover="this.style.background='#EF5B25'" onmouseout="this.style.background='#0B071E'">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                    <a href="https://wa.me/917386738665?text=Hi%20Rao%27s%20Mobiles%2C%20I%20want%20to%20buy%20{{ item.product.name | urlencode }}%20for%20%E2%82%B9{{ item.product.discount_price or item.product.price | int }}.%20Is%20it%20available%3F"
+                       target="_blank"
+                       style="flex: 1; background: #25D366; color: #fff; border: none; border-radius: 10px; padding: 10px 0; font-weight: 700; font-size: 13px; text-align: center; text-decoration: none; transition: background 0.2s;"
+                       onmouseover="this.style.background='#1EBE5C'" onmouseout="this.style.background='#25D366'">
+                        <i class="fab fa-whatsapp"></i> Order
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 80px 24px;">
+        <div style="width: 100px; height: 100px; background: #FEF2F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+            <i class="fas fa-heart-crack" style="font-size: 42px; color: #EF5B25;"></i>
+        </div>
+        <h2 style="font-size: 24px; font-weight: 800; color: #0B071E; margin: 0 0 12px;">Your wishlist is empty</h2>
+        <p style="color: #6B7280; font-size: 16px; margin: 0 0 28px;">Start saving the products you love!</p>
+        <a href="{{ url_for('shop.shop') }}" style="background: #EF5B25; color: #fff; border-radius: 50px; padding: 14px 36px; font-weight: 800; font-size: 15px; text-decoration: none; box-shadow: 0 6px 20px rgba(239,91,37,0.4); display: inline-block;">
+            <i class="fas fa-shopping-bag"></i> Browse Products
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

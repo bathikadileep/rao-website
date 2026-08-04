@@ -34,6 +34,7 @@ from routes.checkout import checkout_bp
 from routes.dashboard import dashboard_bp
 from routes.admin import admin_bp
 from routes.services import services_bp
+from routes.wishlist import wishlist_bp
 from api.main import api_bp
 
 app.register_blueprint(auth_bp)
@@ -43,6 +44,7 @@ app.register_blueprint(checkout_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(services_bp)
+app.register_blueprint(wishlist_bp)
 app.register_blueprint(api_bp, url_prefix='/api')
 
 

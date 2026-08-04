@@ -26,6 +26,7 @@ class User(UserMixin, db.Model):
     orders = db.relationship('Order', backref='user', lazy=True)
     cart_items = db.relationship('CartItem', backref='user', lazy=True)
     service_bookings = db.relationship('ServiceBooking', backref='user', lazy=True)
+    wishlist_items = db.relationship('WishlistItem', backref='user', lazy=True, cascade='all, delete-orphan')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -134,3 +135,14 @@ class ServiceBooking(db.Model):
     notes = db.Column(db.Text, default='')
     status = db.Column(db.String(30), default='pending')
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+
+class WishlistItem(db.Model):
+    __tablename__ = 'wishlist_items'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    product = db.relationship('Product', lazy=True)
