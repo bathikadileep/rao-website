@@ -55,25 +55,35 @@
 {% endif %}
 
 {% if services %}
-<section class="section" style="background: var(--bg-soft);">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Mobile Repairing Services</h2>
-            <a href="{{ url_for('services.services') }}" class="btn btn-outline btn-sm">Book Repair Service</a>
+<section class="section" style="position: relative; overflow: hidden; padding: 80px 0; color: #ffffff; margin: 40px 0;">
+    <!-- Background Video video_1.mp4 -->
+    <video autoplay loop muted playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; filter: brightness(0.6) contrast(1.15);">
+        <source src="{{ url_for('static', filename='videos/video_1.mp4') }}" type="video/mp4">
+    </video>
+    <!-- Overlay for text clarity -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(15, 10, 36, 0.75) 0%, rgba(10, 6, 25, 0.85) 100%); z-index: 2;"></div>
+
+    <div class="container" style="position: relative; z-index: 10;">
+        <div class="section-header" style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <span style="color: #EF5B25; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 6px;">🔴 CERTIFIED CHIP-LEVEL REPAIR</span>
+                <h2 class="section-title" style="color: #ffffff; font-size: 36px; font-weight: 900; letter-spacing: -0.5px; text-shadow: 0 4px 16px rgba(0,0,0,0.8);">Mobile Repairing Services</h2>
+            </div>
+            <a href="{{ url_for('services.services') }}" class="btn btn-primary btn-sm" style="background: #EF5B25; border-color: #EF5B25; color: #ffffff; font-weight: 700; border-radius: 50px; padding: 10px 24px; box-shadow: 0 4px 16px rgba(239,91,37,0.5); text-decoration: none;">Book Repair Service <i class="fas fa-arrow-right"></i></a>
         </div>
-        <div class="product-grid">
+        <div class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
             {% for service in services %}
-            <a href="{{ url_for('services.service_detail', slug=service.slug) }}" class="product-card">
-                <div class="product-card-img" style="height: 160px; background: rgba(60,39,125,0.03);">
-                    <i class="fas {{ service.image_icon }}" style="font-size: 48px; color: var(--accent);"></i>
+            <a href="{{ url_for('services.service_detail', slug=service.slug) }}" class="product-card" style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 16px; overflow: hidden; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 8px 32px rgba(0,0,0,0.4);">
+                <div class="product-card-img" style="height: 140px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas {{ service.image_icon }}" style="font-size: 48px; color: #FF7034; filter: drop-shadow(0 4px 12px rgba(255,112,52,0.4));"></i>
                 </div>
-                <div class="product-card-body">
-                    <h3 class="product-card-name">{{ service.name }}</h3>
+                <div class="product-card-body" style="padding: 20px; color: #ffffff;">
+                    <h3 class="product-card-name" style="color: #ffffff; font-size: 16px; font-weight: 800; margin-bottom: 8px;">{{ service.name }}</h3>
                     <div class="product-card-price">
-                        <span class="price-current">{{ service.price|format_price }}</span>
+                        <span class="price-current" style="color: #FFD700; font-size: 20px; font-weight: 900;">{{ service.price|format_price }}</span>
                     </div>
-                    <div style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">
-                        <i class="fas fa-clock"></i> Estimated: {{ service.estimated_time }}
+                    <div style="margin-top: 10px; font-size: 12.5px; color: rgba(255,255,255,0.85); font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-clock" style="color: #25D366;"></i> Estimated: {{ service.estimated_time }}
                     </div>
                 </div>
             </a>
