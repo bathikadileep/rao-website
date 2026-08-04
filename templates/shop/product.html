@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+<div class="product-detail">
+    <div class="product-detail-img">
+        {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+        {% else %}
+            <i class="fas fa-image placeholder-icon" style="font-size: 72px; color: var(--text-muted);"></i>
+        {% endif %}
+    </div>
+
+    <div class="product-detail-info">
+        <p style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+            {{ product.category.name if product.category else 'General' }}
+        </p>
+        <h1>{{ product.name }}</h1>
+
+        <div class="product-rating" style="margin: 12px 0;">
+            {% for i in range(5) %}
+                {% if i < (product.rating or 0)|int %}
+                    <i class="fas fa-star" style="color: var(--warning);"></i>
+                {% else %}
+                    <i class="far fa-star" style="color: var(--text-muted);"></i>
+                {% endif %}
+            {% endfor %}
+            <span style="margin-left: 8px; color: var(--text-secondary); font-size: 14px;">({{ product.rating or '0.0' }})</span>
+        </div>
+
+        <div class="product-detail-price">
+            {{ (product.discount_price or product.price)|format_price }}
+            {% if product.discount_price %}
+                <span class="original">{{ product.price|format_price }}</span>
+            {% endif %}
+        </div>
+
+        <p class="product-detail-desc">{{ product.description or 'No description available.' }}</p>
+
+        <div class="stock-info {{ 'stock-in' if product.stock > 0 else 'stock-out' }}">
+            {% if product.stock > 0 %}
+                <i class="fas fa-check-circle"></i> In Stock ({{ product.stock }} available)
+            {% else %}
+                <i class="fas fa-times-circle"></i> Out of Stock
+            {% endif %}
+        </div>
+
+        {% if product.stock > 0 %}
+        <form action="{{ url_for('cart.add_to_cart') }}" method="POST" id="add-to-cart-form">
+            <input type="hidden" name="product_id" value="{{ product.id }}">
+            <div class="quantity-selector">
+                <button type="button" class="quantity-btn" onclick="changeQty(-1)">-</button>
+                <input type="number" name="quantity" id="qty" class="quantity-input" value="1" min="1" max="{{ product.stock }}">
+                <button type="button" class="quantity-btn" onclick="changeQty(1)">+</button>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                <i class="fas fa-shopping-bag"></i> Add to Cart
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+{% if related %}
+<section class="section">
+    <div class="container">
+        <h2 class="section-title">You May Also Like</h2>
+        <div class="product-grid" style="margin-top: 24px;">
+            {% for p in related %}
+            <a href="{{ url_for('shop.product_detail', slug=p.slug) }}" class="product-card">
+                <div class="product-card-img">
+                    {% if p.image_url %}
+                        <img src="{{ p.image_url }}" alt="{{ p.name }}">
+                    {% else %}
+                        <i class="fas fa-image placeholder-icon"></i>
+                    {% endif %}
+                </div>
+                <div class="product-card-body">
+                    <h3 class="product-card-name">{{ p.name }}</h3>
+                    <div class="product-card-price">
+                        <span class="price-current">{{ (p.discount_price or p.price)|format_price }}</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function changeQty(delta) {
+    const input = document.getElementById('qty');
+    const val = parseInt(input.value) + delta;
+    if (val >= 1 && val <= parseInt(input.max)) {
+        input.value = val;
+    }
+}
+</script>
+{% endblock %}

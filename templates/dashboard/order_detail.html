@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Order #{{ order.id }}{% endblock %}
+{% block content %}
+<div class="dashboard-page">
+    <a href="{{ url_for('dashboard.orders') }}" style="color: var(--text-muted); font-size: 14px; display: inline-block; margin-bottom: 16px;">
+        <i class="fas fa-arrow-left"></i> Back to Orders
+    </a>
+
+    <div class="dashboard-header">
+        <h1>Order #{{ order.id }}</h1>
+        <p>Placed on {{ order.created_at|format_date }}</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-card-label">Total</div>
+            <div class="stat-card-value stat-card-accent">{{ order.total_amount|format_price }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Status</div>
+            <div><span class="badge badge-{{ order.status }}" style="font-size: 14px; padding: 8px 14px;">{{ order.status|capitalize }}</span></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Items</div>
+            <div class="stat-card-value">{{ order.items|length }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-label">Payment</div>
+            <div class="stat-card-value" style="font-size: 20px;">{{ 'Online' if order.payment_id else 'COD' }}</div>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+        <div class="form-card">
+            <h2><i class="fas fa-location-dot"></i> Shipping Address</h2>
+            <div style="font-size: 14px; line-height: 1.8; color: var(--text-secondary);">
+                <strong style="color: var(--text);">{{ order.shipping_name }}</strong><br>
+                {{ order.shipping_address }}<br>
+                {{ order.shipping_city }}, {{ order.shipping_state }} - {{ order.shipping_pincode }}<br>
+                Phone: {{ order.shipping_phone }}
+            </div>
+        </div>
+        <div class="form-card">
+            <h2><i class="fas fa-box"></i> Items</h2>
+            {% for item in order.items %}
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-light); font-size: 14px;">
+                <span>{{ item.product.name }} <span style="color: var(--text-muted);">x{{ item.quantity }}</span></span>
+                <span style="font-weight: 600;">{{ (item.price * item.quantity)|format_price }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <a href="{{ url_for('shop.shop') }}" class="btn btn-primary">Shop More</a>
+</div>
+{% endblock %}

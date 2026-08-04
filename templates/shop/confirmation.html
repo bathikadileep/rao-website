@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Order Confirmed{% endblock %}
+{% block content %}
+<div class="confirmation-page">
+    <div class="confirmation-icon">
+        <i class="fas fa-check"></i>
+    </div>
+    <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 12px;">Order Confirmed!</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 32px;">
+        Thank you for your purchase. Your order #{{ order.id }} has been placed successfully.
+    </p>
+
+    <div class="form-card" style="text-align: left; max-width: 500px; margin: 0 auto 32px;">
+        <h2><i class="fas fa-receipt"></i> Order #{{ order.id }}</h2>
+        <div class="cart-summary-row">
+            <span>Date</span>
+            <span>{{ order.created_at|format_date }}</span>
+        </div>
+        <div class="cart-summary-row">
+            <span>Status</span>
+            <span class="badge badge-{{ order.status }}">{{ order.status|capitalize }}</span>
+        </div>
+        <div class="cart-summary-row total">
+            <span>Total</span>
+            <span>{{ order.total_amount|format_price }}</span>
+        </div>
+
+        <h3 style="font-size: 14px; margin-top: 20px; margin-bottom: 8px; font-weight: 600;">Items</h3>
+        {% for item in order.items %}
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px;">
+            <span>{{ item.product.name }} x{{ item.quantity }}</span>
+            <span>{{ (item.price * item.quantity)|format_price }}</span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <a href="{{ url_for('checkout.generate_invoice', order_id=order.id) }}" target="_blank" class="btn btn-primary" style="background: var(--accent); border-color: var(--accent);">
+            <i class="fas fa-file-invoice"></i> Print / Download Tax Invoice Bill
+        </a>
+        <a href="{{ url_for('dashboard.order_detail', order_id=order.id) }}" class="btn btn-primary">View Order</a>
+        <a href="{{ url_for('shop.shop') }}" class="btn btn-outline">Continue Shopping</a>
+    </div>
+</div>
+{% endblock %}

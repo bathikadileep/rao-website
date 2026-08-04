@@ -1,0 +1,75 @@
+{% extends 'admin/base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block admin_content %}
+<h1>Overview</h1>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-label">Total Revenue</div>
+        <div class="stat-card-value stat-card-accent">{{ total_revenue|format_price }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-label">Total Orders</div>
+        <div class="stat-card-value">{{ total_orders }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-label">Pending Orders</div>
+        <div class="stat-card-value">{{ pending_orders }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-label">Pending Bookings</div>
+        <div class="stat-card-value">{{ pending_bookings }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-label">Total Phones</div>
+        <div class="stat-card-value">{{ total_products }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-card-label">Total Users</div>
+        <div class="stat-card-value">{{ total_users }}</div>
+    </div>
+</div>
+
+<div class="section-header">
+    <h2 class="section-title" style="font-size: 20px;">Recent Orders</h2>
+    <a href="{{ url_for('admin.orders') }}" class="btn btn-outline btn-sm">View All</a>
+</div>
+
+<div class="table-wrapper">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders[:10] %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.shipping_name }}</td>
+                <td>{{ order.created_at|format_date }}</td>
+                <td style="font-weight: 600;">{{ order.total_amount|format_price }}</td>
+                <td><span class="badge badge-{{ order.status }}">{{ order.status|capitalize }}</span></td>
+                <td>
+                    <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.id) }}" style="display: flex; gap: 4px;">
+                        <select name="status" class="sort-select">
+                            <option value="pending" {{ 'selected' if order.status == 'pending' }}>Pending</option>
+                            <option value="confirmed" {{ 'selected' if order.status == 'confirmed' }}>Confirmed</option>
+                            <option value="shipped" {{ 'selected' if order.status == 'shipped' }}>Shipped</option>
+                            <option value="delivered" {{ 'selected' if order.status == 'delivered' }}>Delivered</option>
+                            <option value="cancelled" {{ 'selected' if order.status == 'cancelled' }}>Cancelled</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-outline">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

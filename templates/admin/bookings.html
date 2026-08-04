@@ -1,0 +1,63 @@
+{% extends 'admin/base.html' %}
+{% block title %}Bookings{% endblock %}
+{% block admin_content %}
+<div class="section-header">
+    <h1 style="margin: 0;">Service Bookings</h1>
+    <div class="filter-tabs">
+        <a href="{{ url_for('admin.bookings') }}" class="filter-tab {{ 'active' if not current_status }}">All</a>
+        {% for s in ['pending', 'confirmed', 'completed', 'cancelled'] %}
+            <a href="{{ url_for('admin.bookings', status=s) }}" class="filter-tab {{ 'active' if current_status == s }}">{{ s|capitalize }}</a>
+        {% endfor %}
+    </div>
+</div>
+
+{% if bookings %}
+<div class="table-wrapper">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Booking #</th>
+                <th>Customer</th>
+                <th>Service</th>
+                <th>Phone Model</th>
+                <th>Date & Time</th>
+                <th>Status</th>
+                <th>Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>#{{ booking.id }}</td>
+                <td>
+                    {{ booking.user.full_name }}<br>
+                    <span style="color: var(--text-muted); font-size: 12px;">{{ booking.user.phone }}</span>
+                </td>
+                <td style="font-weight: 600;">{{ booking.service.name }}</td>
+                <td>{{ booking.phone_model }}</td>
+                <td>{{ booking.booking_date|format_date }}<br><span style="color: var(--text-muted); font-size: 12px;">{{ booking.time_slot }}</span></td>
+                <td><span class="badge badge-{{ booking.status }}">{{ booking.status|capitalize }}</span></td>
+                <td>
+                    <form method="POST" action="{{ url_for('admin.update_booking_status', booking_id=booking.id) }}" style="display: flex; gap: 4px;">
+                        <select name="status" class="sort-select">
+                            <option value="pending" {{ 'selected' if booking.status == 'pending' }}>Pending</option>
+                            <option value="confirmed" {{ 'selected' if booking.status == 'confirmed' }}>Confirmed</option>
+                            <option value="completed" {{ 'selected' if booking.status == 'completed' }}>Completed</option>
+                            <option value="cancelled" {{ 'selected' if booking.status == 'cancelled' }}>Cancelled</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-outline">Update</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <i class="fas fa-calendar-check"></i>
+    <h3>No bookings found</h3>
+    <p>Service bookings will appear here.</p>
+</div>
+{% endif %}
+{% endblock %}

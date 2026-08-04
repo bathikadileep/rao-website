@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}My Service Bookings{% endblock %}
+{% block content %}
+<div class="dashboard-page">
+    <a href="{{ url_for('dashboard.dashboard') }}" style="color: var(--text-muted); font-size: 14px; display: inline-block; margin-bottom: 16px;">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <div class="dashboard-header">
+        <h1>My Service Bookings</h1>
+        <p>Track your mobile service appointments.</p>
+    </div>
+
+    {% if bookings %}
+    <div class="table-wrapper">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Booking #</th>
+                    <th>Service</th>
+                    <th>Phone</th>
+                    <th>Date & Time</th>
+                    <th>Cost</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>#{{ booking.id }}</td>
+                    <td style="font-weight: 600;">{{ booking.service.name }}</td>
+                    <td>{{ booking.phone_model }}</td>
+                    <td>{{ booking.booking_date|format_date }}<br><span style="color: var(--text-muted); font-size: 12px;">{{ booking.time_slot }}</span></td>
+                    <td>{{ booking.service.price|format_price }}</td>
+                    <td><span class="badge badge-{{ booking.status }}">{{ booking.status|capitalize }}</span></td>
+                    <td>
+                        {% if booking.status in ('pending', 'confirmed') %}
+                        <form method="POST" action="{{ url_for('services.cancel_booking', booking_id=booking.id) }}" onsubmit="return confirm('Cancel this booking?')">
+                            <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                        </form>
+                        {% else %}
+                        <span style="color: var(--text-muted); font-size: 13px;">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-calendar-check"></i>
+        <h3>No service bookings</h3>
+        <p>Book a mobile service to see it here.</p>
+        <a href="{{ url_for('services.services') }}" class="btn btn-primary">Browse Services</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'admin/base.html' %}
+{% block title %}Users{% endblock %}
+{% block admin_content %}
+<h1>Users</h1>
+
+<div class="table-wrapper">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Joined</th>
+                <th>Role</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>#{{ user.id }}</td>
+                <td style="font-weight: 600;">{{ user.username }}</td>
+                <td>{{ user.full_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.created_at|format_date }}</td>
+                <td>
+                    <span class="badge {{ 'badge-confirmed' if user.is_admin else 'badge-pending' }}">
+                        {{ 'Admin' if user.is_admin else 'Customer' }}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge {{ 'badge-delivered' if user.is_active_user else 'badge-cancelled' }}">
+                        {{ 'Active' if user.is_active_user else 'Inactive' }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

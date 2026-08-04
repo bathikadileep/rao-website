@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}Shop Smartphones & Accessories - Nani Rao's Mobile Accessories{% endblock %}
+{% block content %}
+<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+    <div class="section-header" style="align-items: flex-start; flex-direction: column; gap: 8px;">
+        <h1 class="section-title">Smartphones & Accessories Catalog</h1>
+        {% if search %}
+            <p style="color: var(--text-secondary); font-size: 14px;">
+                Showing search results for "<strong>{{ search }}</strong>" ({{ products.total }} products found)
+            </p>
+        {% else %}
+            <p style="color: var(--text-secondary); font-size: 14px;">
+                Showing {{ products.items|length }} of {{ products.total }} items (10 per page)
+            </p>
+        {% endif %}
+    </div>
+
+    <div class="filter-bar">
+        <div class="filter-tabs">
+            <a href="{{ url_for('shop.shop', q=search) }}" class="filter-tab {{ 'active' if not current_category }}">All Products</a>
+            {% for cat in categories %}
+                <a href="{{ url_for('shop.shop', category=cat.slug, q=search) }}" class="filter-tab {{ 'active' if current_category == cat.slug }}">{{ cat.name }}</a>
+            {% endfor %}
+        </div>
+        <select class="sort-select" onchange="window.location.href=getSortUrl(this.value)">
+            <option value="newest" {{ 'selected' if sort == 'newest' }}>Newest First</option>
+            <option value="price_low" {{ 'selected' if sort == 'price_low' }}>Price: Low to High</option>
+            <option value="price_high" {{ 'selected' if sort == 'price_high' }}>Price: High to Low</option>
+            <option value="rating" {{ 'selected' if sort == 'rating' }}>Top Rated</option>
+        </select>
+    </div>
+
+    {% if products.items %}
+        <div class="product-grid">
+            {% for product in products.items %}
+            <a href="{{ url_for('shop.product_detail', slug=product.slug) }}" class="product-card">
+                <div class="product-card-img" style="height: 220px;">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <i class="fas fa-image placeholder-icon"></i>
+                    {% endif %}
+                    {% if product.discount_price %}
+                        <span class="product-badge">{{ ((1 - product.discount_price / product.price) * 100)|int }}% OFF</span>
+                    {% endif %}
+                </div>
+                <div class="product-card-body">
+                    <div class="product-card-category">{{ product.category.name if product.category else 'General' }}</div>
+                    <h3 class="product-card-name">{{ product.name }}</h3>
+                    <div class="product-card-price">
+                        <span class="price-current">{{ (product.discount_price or product.price)|format_price }}</span>
+                        {% if product.discount_price %}
+                            <span class="price-original">{{ product.price|format_price }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="product-card-footer">
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        <span>{{ product.rating or '4.5' }}</span>
+                    </div>
+                    <span style="font-size: 12px; color: var(--text-muted);">In Stock ({{ product.stock }})</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+
+        {% if products.pages > 1 %}
+        <div class="pagination-container">
+            {% if products.has_prev %}
+                <a href="{{ url_for('shop.shop', page=products.prev_num, category=current_category, sort=sort, q=search) }}" class="pagination-link">&laquo; Prev</a>
+            {% else %}
+                <span class="pagination-link disabled">&laquo; Prev</span>
+            {% endif %}
+            
+            {% for p in products.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                {% if p %}
+                    <a href="{{ url_for('shop.shop', page=p, category=current_category, sort=sort, q=search) }}" class="pagination-link {{ 'active' if p == products.page }}">{{ p }}</a>
+                {% else %}
+                    <span class="pagination-link disabled">&hellip;</span>
+                {% endif %}
+            {% endfor %}
+
+            {% if products.has_next %}
+                <a href="{{ url_for('shop.shop', page=products.next_num, category=current_category, sort=sort, q=search) }}" class="pagination-link">Next &raquo;</a>
+            {% else %}
+                <span class="pagination-link disabled">Next &raquo;</span>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-search" style="font-size: 48px; color: var(--accent); margin-bottom: 16px;"></i>
+            <h3>No products found</h3>
+            <p>We couldn't find any products matching your search criteria.</p>
+            <a href="{{ url_for('shop.shop') }}" class="btn btn-primary" style="margin-top: 16px;">View All Products</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function getSortUrl(val) {
+    const url = new URL(window.location);
+    url.searchParams.set('sort', val);
+    return url.toString();
+}
+</script>
+{% endblock %}

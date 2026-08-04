@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Book {{ service.name }}{% endblock %}
+{% block content %}
+<div class="checkout-page">
+    <a href="{{ url_for('services.service_detail', slug=service.slug) }}" style="color: var(--text-muted); font-size: 14px; display: inline-block; margin-bottom: 16px;">
+        <i class="fas fa-arrow-left"></i> Back to Service
+    </a>
+    <h1>Book {{ service.name }}</h1>
+
+    <div class="form-card" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <div style="font-weight: 600;">{{ service.name }}</div>
+            <div style="color: var(--text-muted); font-size: 14px;"><i class="fas fa-clock"></i> {{ service.estimated_time }}</div>
+        </div>
+        <div style="font-size: 20px; font-weight: 700; color: var(--accent);">{{ service.price|format_price }}</div>
+    </div>
+
+    <form method="POST">
+        <div class="form-card">
+            <h2><i class="fas fa-mobile-screen"></i> Phone Details</h2>
+            <div class="form-group">
+                <label>Phone Model</label>
+                <input type="text" name="phone_model" class="form-control" placeholder="e.g. Rao X1 Pro, iPhone 15, Samsung S24" required>
+            </div>
+            {% if current_user.phone %}
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" class="form-control" value="{{ current_user.phone }}" disabled>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">We will contact you on this number. <a href="{{ url_for('auth.profile') }}">Update</a></p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="form-card">
+            <h2><i class="fas fa-calendar-check"></i> Schedule</h2>
+            <div class="form-group">
+                <label>Preferred Date</label>
+                <input type="date" name="booking_date" class="form-control" min="{{ today }}" required>
+            </div>
+            <div class="form-group">
+                <label>Time Slot</label>
+                <select name="time_slot" class="form-control" required>
+                    <option value="">Select a time slot</option>
+                    {% for slot in time_slots %}
+                        <option value="{{ slot }}">{{ slot }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <h2><i class="fas fa-comment"></i> Additional Details</h2>
+            <div class="form-group">
+                <label>Notes (optional)</label>
+                <textarea name="notes" class="form-control" placeholder="Describe the issue, e.g. screen cracked on left side"></textarea>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-accent btn-lg btn-block">Confirm Booking</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const dateInput = document.querySelector('input[type="date"]');
+    if (dateInput && !dateInput.value) {
+        const today = new Date();
+        dateInput.min = today.toISOString().split('T')[0];
+    }
+});
+</script>
+{% endblock %}

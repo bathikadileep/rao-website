@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Mobile Repairing Services - Nani Rao's Mobile Accessories{% endblock %}
+{% block content %}
+<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+    <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+        <h1 class="section-title">Mobile Repairing & Services</h1>
+        <p style="color: var(--text-secondary); font-size: 15px;">
+            Expert chip-level hardware repair, display combo replacement, battery & liquid damage treatment by certified technicians in Narasaraopet.
+        </p>
+    </div>
+
+    <!-- Quick WhatsApp Service Quote Banner -->
+    <div style="background: linear-gradient(135deg, #1E1735 0%, #3C277D 100%); color: #ffffff; padding: 24px; border-radius: var(--radius); margin-bottom: 36px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: var(--shadow);">
+        <div>
+            <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Need an Instant Price Quote for Your Phone?</h3>
+            <p style="font-size: 14px; opacity: 0.85;">Send us your mobile model & issue on WhatsApp for immediate price estimation!</p>
+        </div>
+        <a href="https://wa.me/917386738665?text=Hi%20Nani%20Rao%20Mobile%20Accessories,%20I%20need%20a%20quote%20for%20my%20phone%20repair." target="_blank" class="btn btn-primary" style="background: #25D366; border-color: #25D366; color: #ffffff; font-weight: 700; padding: 12px 24px; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="fab fa-whatsapp" style="font-size: 20px;"></i> Get WhatsApp Quote: 7386738665
+        </a>
+    </div>
+
+    {% if services %}
+    <div class="product-grid">
+        {% for service in services %}
+        <div class="product-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <div class="product-card-img" style="height: 160px; background: rgba(60,39,125,0.04);">
+                    <i class="fas {{ service.image_icon }}" style="font-size: 56px; color: var(--accent);"></i>
+                </div>
+                <div class="product-card-body">
+                    <h3 class="product-card-name" style="font-size: 17px; margin-bottom: 6px;">{{ service.name }}</h3>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.5;">
+                        {{ service.description }}
+                    </p>
+                    <div class="product-card-price" style="margin-bottom: 6px;">
+                        <span style="font-size: 12px; color: var(--text-muted); display: block;">Starting from</span>
+                        <span class="price-current" style="font-size: 22px; color: var(--accent);">{{ service.price|format_price }}</span>
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-clock" style="color: var(--primary);"></i> Estimated duration: <strong>{{ service.estimated_time }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card-footer" style="padding: 12px 16px; background: var(--bg-soft); border-top: 1px solid var(--border-light); display: flex; gap: 8px;">
+                <a href="{{ url_for('services.service_detail', slug=service.slug) }}" class="btn btn-primary btn-sm" style="flex: 1; text-align: center;">Book Online</a>
+                <a href="https://wa.me/917386738665?text=Hi,%20I%20want%20to%20inquire%20about%20{{ service.name|urlencode }}" target="_blank" class="btn btn-outline btn-sm" style="color: #25D366; border-color: #25D366;" title="WhatsApp Inquiry">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-tools" style="font-size: 48px; color: var(--accent); margin-bottom: 16px;"></i>
+        <h3>No repair services currently listed</h3>
+        <p>Contact us on WhatsApp for any custom repair requests.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

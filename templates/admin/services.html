@@ -1,0 +1,53 @@
+{% extends 'admin/base.html' %}
+{% block title %}Services{% endblock %}
+{% block admin_content %}
+<div class="section-header">
+    <h1 style="margin: 0;">Services</h1>
+    <a href="{{ url_for('admin.add_service') }}" class="btn btn-primary">+ Add Service</a>
+</div>
+
+<div class="table-wrapper">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Service</th>
+                <th>Price</th>
+                <th>Est. Time</th>
+                <th>Bookings</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>#{{ service.id }}</td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fas {{ service.image_icon }}" style="color: var(--accent);"></i>
+                        <span style="font-weight: 600;">{{ service.name }}</span>
+                    </div>
+                </td>
+                <td>{{ service.price|format_price }}</td>
+                <td>{{ service.estimated_time }}</td>
+                <td>{{ service.bookings|length }}</td>
+                <td>
+                    <span class="badge {{ 'badge-delivered' if service.is_active else 'badge-cancelled' }}">
+                        {{ 'Active' if service.is_active else 'Inactive' }}
+                    </span>
+                </td>
+                <td>
+                    <div style="display: flex; gap: 8px;">
+                        <a href="{{ url_for('admin.edit_service', service_id=service.id) }}" class="btn btn-sm btn-outline">Edit</a>
+                        <form method="POST" action="{{ url_for('admin.delete_service', service_id=service.id) }}" onsubmit="return confirm('Deactivate this service?')">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

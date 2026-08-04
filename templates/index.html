@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% block title %}Nani Rao's Mobile Accessories & Repair - Narasaraopet{% endblock %}
+
+{% block content %}
+<section class="hero-vibers" style="position: relative; width: 100%; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #0B071E; color: #ffffff; padding: 140px 20px 80px;">
+    <video autoplay loop muted playsinline class="hero-vibers-video" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 1; filter: brightness(0.88) contrast(1.05);">
+        <source src="{{ url_for('static', filename='videos/bg_video.mp4') }}" type="video/mp4">
+    </video>
+    <div class="hero-vibers-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(15, 10, 36, 0.18) 0%, rgba(10, 6, 25, 0.45) 100%); z-index: 2;"></div>
+
+    <div class="hero-vibers-content" style="position: relative; z-index: 10; max-width: 850px; text-align: center; margin: 0 auto;">
+        <div class="hero-badge-pill" style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.3); backdrop-filter: blur(12px); padding: 6px 20px; border-radius: 50px; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #ffffff; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.3);">
+            <span class="live-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #EF5B25; box-shadow: 0 0 10px #EF5B25; display: inline-block;"></span> ENTERPRISE GRADE MOBILE SOLUTIONS
+        </div>
+
+        <h1 class="hero-vibers-title" style="font-size: 58px; font-weight: 900; line-height: 1.15; letter-spacing: -1.5px; margin-bottom: 20px; color: #ffffff; text-shadow: 0 4px 24px rgba(0,0,0,0.85);">
+            The Smarter Way<br>
+            <span style="color: #ffffff; display: inline-block; margin: 6px 0; text-shadow: 0 4px 24px rgba(0,0,0,0.85);">to Shop Mobiles</span>
+        </h1>
+
+        <p class="hero-vibers-sub" style="font-size: 17px; line-height: 1.6; color: #ffffff; text-shadow: 0 2px 16px rgba(0,0,0,0.9); font-weight: 500; max-width: 680px; margin: 0 auto 36px;">
+            Nani Rao's Mobile Accessories delivers genuine smartphones, original display combos, premium cases, screen guards, and certified chip-level mobile repairs in Narasaraopet.
+        </p>
+
+        <div class="hero-vibers-ctas" style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
+            <a href="{{ url_for('shop.shop') }}" class="btn-vibers-primary" style="background: #EF5B25; color: #ffffff; padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 8px 24px rgba(239, 91, 37, 0.4);">
+                Shop Products <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="{{ url_for('services.services') }}" class="btn-vibers-outline" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.35); backdrop-filter: blur(12px); color: #ffffff; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);">
+                Explore Services
+            </a>
+        </div>
+    </div>
+</section>
+
+{% if categories %}
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Store Categories</h2>
+            <a href="{{ url_for('shop.shop') }}" class="btn btn-outline btn-sm">View All Catalog</a>
+        </div>
+        <div class="category-grid">
+            {% set icons = ['fa-mobile-screen', 'fa-shield-halved', 'fa-mobile-retro', 'fa-bolt', 'fa-volume-high', 'fa-box-open', 'fa-mobile-screen-button'] %}
+            {% for cat in categories %}
+            <a href="{{ url_for('shop.shop', category=cat.slug) }}" class="category-card" style="border-top: 3px solid var(--accent);">
+                <i class="fas {{ icons[loop.index0 % icons|length] }}" style="color: var(--primary);"></i>
+                <h3 style="font-size: 16px; margin-top: 8px;">{{ cat.name }}</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">{{ cat.description }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if services %}
+<section class="section" style="background: var(--bg-soft);">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Mobile Repairing Services</h2>
+            <a href="{{ url_for('services.services') }}" class="btn btn-outline btn-sm">Book Repair Service</a>
+        </div>
+        <div class="product-grid">
+            {% for service in services %}
+            <a href="{{ url_for('services.service_detail', slug=service.slug) }}" class="product-card">
+                <div class="product-card-img" style="height: 160px; background: rgba(60,39,125,0.03);">
+                    <i class="fas {{ service.image_icon }}" style="font-size: 48px; color: var(--accent);"></i>
+                </div>
+                <div class="product-card-body">
+                    <h3 class="product-card-name">{{ service.name }}</h3>
+                    <div class="product-card-price">
+                        <span class="price-current">{{ service.price|format_price }}</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">
+                        <i class="fas fa-clock"></i> Estimated: {{ service.estimated_time }}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if featured %}
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Smartphones & Top Deals</h2>
+            <a href="{{ url_for('shop.shop') }}" class="btn btn-outline btn-sm">View All Products</a>
+        </div>
+        <div class="product-grid">
+            {% for product in featured %}
+            <a href="{{ url_for('shop.product_detail', slug=product.slug) }}" class="product-card">
+                <div class="product-card-img" style="height: 200px;">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <i class="fas fa-mobile-screen-button placeholder-icon" style="font-size: 72px; color: var(--text-muted);"></i>
+                    {% endif %}
+                    {% if product.discount_price %}
+                        <span class="product-badge">{{ ((1 - product.discount_price / product.price) * 100)|int }}% OFF</span>
+                    {% endif %}
+                </div>
+                <div class="product-card-body">
+                    <div class="product-card-category">{{ product.category.name if product.category else 'General' }}</div>
+                    <h3 class="product-card-name">{{ product.name }}</h3>
+                    <div class="product-card-price">
+                        <span class="price-current">{{ (product.discount_price or product.price)|format_price }}</span>
+                        {% if product.discount_price %}
+                            <span class="price-original">{{ product.price|format_price }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="product-card-footer">
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        <span>{{ product.rating or '4.5' }}</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="section" style="background: var(--bg-soft);">
+    <div class="container" style="text-align: center;">
+        <h2 class="section-title" style="margin-bottom: 12px;">Why Choose Nani Rao's Mobile Accessories?</h2>
+        <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 40px;">Original products, certified technicians, and top customer satisfaction in Narasaraopet.</p>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div style="font-size: 28px; color: var(--accent); margin-bottom: 12px;"><i class="fas fa-shield-halved"></i></div>
+                <div class="stat-card-label">100% Original</div>
+                <div style="font-size: 14px; color: var(--text-secondary);">Genuine phones, cases & display combos</div>
+            </div>
+            <div class="stat-card">
+                <div style="font-size: 28px; color: var(--accent); margin-bottom: 12px;"><i class="fas fa-award"></i></div>
+                <div class="stat-card-label">Best Quality</div>
+                <div style="font-size: 14px; color: var(--text-secondary);">Grade-A accessories & screen guards</div>
+            </div>
+            <div class="stat-card">
+                <div style="font-size: 28px; color: var(--accent); margin-bottom: 12px;"><i class="fas fa-screwdriver-wrench"></i></div>
+                <div class="stat-card-label">Expert Service</div>
+                <div style="font-size: 14px; color: var(--text-secondary);">Fast chip-level mobile repair</div>
+            </div>
+            <div class="stat-card">
+                <div style="font-size: 28px; color: var(--accent); margin-bottom: 12px;"><i class="fab fa-whatsapp"></i></div>
+                <div class="stat-card-label">Instant Support</div>
+                <div style="font-size: 14px; color: var(--text-secondary);">WhatsApp direct care on 7386738665</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Interactive Google Maps & Store Location Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+            <h2 class="section-title">Visit Our Store in Narasaraopet</h2>
+            <p style="color: var(--text-secondary);">Visit us for mobile repairs, original display folder fitting, cases, screen guards & accessories.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px; background: #ffffff; border-radius: var(--radius); padding: 24px; border: 1px solid var(--border); box-shadow: var(--shadow);">
+            <div>
+                <div style="font-size: 12px; font-weight: 800; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;">STORE LOCATION</div>
+                <h3 style="font-size: 20px; font-weight: 900; color: var(--primary); margin-bottom: 12px;">Nani Rao's Mobile Accessories</h3>
+                
+                <p style="font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 16px;">
+                    <i class="fas fa-location-dot" style="color: var(--accent); margin-right: 8px;"></i>
+                    <strong>Address:</strong><br>
+                    Opp. LG Showroom, Palnadu Road,<br>
+                    NARASARAOPET, Andhra Pradesh - 522601
+                </p>
+
+                <p style="font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 20px;">
+                    <i class="fab fa-whatsapp" style="color: #25D366; margin-right: 8px;"></i>
+                    <strong>Call / WhatsApp:</strong><br>
+                    <a href="https://wa.me/917386738665" target="_blank" style="color: var(--primary); font-weight: 700;">+91 7386738665</a>
+                </p>
+
+                <div style="margin-bottom: 20px;">
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 4px;">STORE HOURS</span>
+                    <span style="font-size: 13px; font-weight: 600; color: #28a745;"><i class="fas fa-clock"></i> Mon - Sun: 9:00 AM - 9:30 PM</span>
+                </div>
+
+                <a href="https://www.google.com/maps/search/?api=1&query=Palnadu+Road+Narasaraopet+Opp+LG+Showroom" target="_blank" class="btn btn-primary btn-block" style="background: var(--accent); border-color: var(--accent); font-weight: 700; text-align: center; justify-content: center;">
+                    <i class="fas fa-diamond-turn-right"></i> Get Directions on Google Maps
+                </a>
+            </div>
+
+            <div style="border-radius: var(--radius-sm); overflow: hidden; height: 340px; border: 1px solid var(--border-light);">
+                <iframe 
+                    title="Nani Rao's Mobile Accessories Location"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3829.418293758348!2d80.0435!3d16.2355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTbCsDE0JzA3LjgiTiA4MMKwMDInMzYuNiJF!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
