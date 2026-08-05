@@ -64,10 +64,13 @@ def clean_image_url(url_str):
         try:
             parsed = urlparse(url_str)
             qs = parse_qs(parsed.query)
-            if 'imgurl' in qs:
+            if 'imgurl' in qs and qs['imgurl'][0]:
                 return unquote(qs['imgurl'][0])
         except Exception:
             pass
+        match = re.search(r'[?&]imgurl=([^&]+)', url_str)
+        if match:
+            return unquote(match.group(1))
     return url_str
 
 
