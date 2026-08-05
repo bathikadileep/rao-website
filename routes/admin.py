@@ -104,7 +104,7 @@ def generate_unique_slug(name, current_id=None):
 @admin_bp.route('/admin/products')
 @admin_required
 def products():
-    products = Product.query.order_by(Product.created_at.desc()).all()
+    products = Product.query.filter_by(is_active=True).order_by(Product.created_at.desc()).all()
     return render_template('admin/products.html', products=products)
 
 
