@@ -56,7 +56,7 @@ class Product(db.Model):
     description = db.Column(db.Text, default='')
     price = db.Column(db.Float, nullable=False)
     discount_price = db.Column(db.Float, nullable=True)
-    image_url = db.Column(db.String(500), default='')
+    image_url = db.Column(db.Text, default='')
     stock = db.Column(db.Integer, default=0)
     is_featured = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)

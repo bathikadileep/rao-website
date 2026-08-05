@@ -52,6 +52,46 @@ def dashboard():
                            active_carts=active_carts)
 
 
+import re
+from urllib.parse import parse_qs, urlparse, unquote
+
+
+def clean_image_url(url_str):
+    if not url_str:
+        return ''
+    url_str = url_str.strip()
+    if 'google.' in url_str and 'imgres' in url_str:
+        try:
+            parsed = urlparse(url_str)
+            qs = parse_qs(parsed.query)
+            if 'imgurl' in qs:
+                return unquote(qs['imgurl'][0])
+        except Exception:
+            pass
+    return url_str
+
+
+def generate_unique_slug(name, current_id=None):
+    slug = re.sub(r'[^a-z0-9\s-]', '', (name or '').lower())
+    slug = re.sub(r'\s+', '-', slug.strip())
+    slug = re.sub(r'-+', '-', slug) or 'product'
+
+    base_slug = slug
+    counter = 1
+    query = Product.query.filter(Product.slug == slug)
+    if current_id:
+        query = query.filter(Product.id != current_id)
+
+    while query.first():
+        slug = f"{base_slug}-{counter}"
+        counter += 1
+        query = Product.query.filter(Product.slug == slug)
+        if current_id:
+            query = query.filter(Product.id != current_id)
+
+    return slug
+
+
 @admin_bp.route('/admin/products')
 @admin_required
 def products():
@@ -64,22 +104,47 @@ def products():
 def add_product():
     categories = Category.query.all()
     if request.method == 'POST':
-        name = request.form.get('name', '').strip()
-        product = Product(
-            name=name,
-            slug=name.lower().replace(' ', '-').replace('&', 'and'),
-            description=request.form.get('description', ''),
-            price=float(request.form.get('price', 0)),
-            discount_price=float(request.form.get('discount_price', 0)) or None,
-            image_url=request.form.get('image_url', ''),
-            stock=int(request.form.get('stock', 0)),
-            category_id=request.form.get('category_id', type=int),
-            is_featured=bool(request.form.get('is_featured')),
-        )
-        db.session.add(product)
-        db.session.commit()
-        flash('Product added!', 'success')
-        return redirect(url_for('admin.products'))
+        try:
+            name = request.form.get('name', '').strip()
+            if not name:
+                flash('Product name is required.', 'error')
+                return render_template('admin/add_product.html', categories=categories)
+
+            price_raw = request.form.get('price', '').strip()
+            price = float(price_raw) if price_raw else 0.0
+
+            disc_raw = request.form.get('discount_price', '').strip()
+            discount_price = float(disc_raw) if disc_raw else None
+
+            stock_raw = request.form.get('stock', '0').strip()
+            stock = int(stock_raw) if stock_raw else 0
+
+            img_url = clean_image_url(request.form.get('image_url', ''))
+            cat_id = request.form.get('category_id', type=int)
+
+            slug = generate_unique_slug(name)
+
+            product = Product(
+                name=name,
+                slug=slug,
+                description=request.form.get('description', '').strip(),
+                price=price,
+                discount_price=discount_price,
+                image_url=img_url,
+                stock=stock,
+                category_id=cat_id if cat_id else None,
+                is_featured=bool(request.form.get('is_featured')),
+                is_active=True
+            )
+            db.session.add(product)
+            db.session.commit()
+            flash('Product added successfully!', 'success')
+            return redirect(url_for('admin.products'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error adding product: {str(e)}', 'error')
+            return render_template('admin/add_product.html', categories=categories)
+
     return render_template('admin/add_product.html', categories=categories)
 
 
@@ -89,19 +154,43 @@ def edit_product(product_id):
     product = Product.query.get_or_404(product_id)
     categories = Category.query.all()
     if request.method == 'POST':
-        product.name = request.form.get('name', product.name)
-        product.description = request.form.get('description', product.description)
-        product.price = float(request.form.get('price', product.price))
-        dp = request.form.get('discount_price', '')
-        product.discount_price = float(dp) if dp else None
-        product.image_url = request.form.get('image_url', product.image_url)
-        product.stock = int(request.form.get('stock', product.stock))
-        product.category_id = request.form.get('category_id', type=int)
-        product.is_featured = bool(request.form.get('is_featured'))
-        product.is_active = bool(request.form.get('is_active', True))
-        db.session.commit()
-        flash('Product updated!', 'success')
-        return redirect(url_for('admin.products'))
+        try:
+            name = request.form.get('name', product.name).strip()
+            if name:
+                if name != product.name:
+                    product.name = name
+                    product.slug = generate_unique_slug(name, current_id=product.id)
+
+            product.description = request.form.get('description', product.description).strip()
+
+            price_raw = request.form.get('price', '').strip()
+            if price_raw:
+                product.price = float(price_raw)
+
+            disc_raw = request.form.get('discount_price', '').strip()
+            product.discount_price = float(disc_raw) if disc_raw else None
+
+            img_url_raw = request.form.get('image_url', '').strip()
+            product.image_url = clean_image_url(img_url_raw)
+
+            stock_raw = request.form.get('stock', '').strip()
+            if stock_raw:
+                product.stock = int(stock_raw)
+
+            cat_id = request.form.get('category_id', type=int)
+            product.category_id = cat_id if cat_id else None
+
+            product.is_featured = bool(request.form.get('is_featured'))
+            product.is_active = bool(request.form.get('is_active', True))
+
+            db.session.commit()
+            flash('Product updated successfully!', 'success')
+            return redirect(url_for('admin.products'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error updating product: {str(e)}', 'error')
+            return render_template('admin/edit_product.html', product=product, categories=categories)
+
     return render_template('admin/edit_product.html', product=product, categories=categories)
 
 
