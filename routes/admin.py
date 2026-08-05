@@ -56,21 +56,27 @@ import re
 from urllib.parse import parse_qs, urlparse, unquote
 
 
+from datetime import datetime, timezone
+
+
 def clean_image_url(url_str):
     if not url_str:
         return ''
     url_str = url_str.strip()
-    if 'google.' in url_str and 'imgres' in url_str:
-        try:
-            parsed = urlparse(url_str)
-            qs = parse_qs(parsed.query)
-            if 'imgurl' in qs and qs['imgurl'][0]:
-                return unquote(qs['imgurl'][0])
-        except Exception:
-            pass
-        match = re.search(r'[?&]imgurl=([^&]+)', url_str)
-        if match:
-            return unquote(match.group(1))
+    if 'google.' in url_str:
+        if 'imgres' in url_str:
+            try:
+                parsed = urlparse(url_str)
+                qs = parse_qs(parsed.query)
+                if 'imgurl' in qs and qs['imgurl'][0]:
+                    return unquote(qs['imgurl'][0])
+            except Exception:
+                pass
+            match = re.search(r'[?&]imgurl=([^&]+)', url_str)
+            if match:
+                return unquote(match.group(1))
+        elif '/aclk' in url_str or '/search' in url_str or '/shopping' in url_str:
+            return 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=600&auto=format&fit=crop'
     return url_str
 
 
@@ -137,7 +143,8 @@ def add_product():
                 stock=stock,
                 category_id=cat_id if cat_id else None,
                 is_featured=bool(request.form.get('is_featured')),
-                is_active=True
+                is_active=True,
+                created_at=datetime.now(timezone.utc)
             )
             db.session.add(product)
             db.session.commit()
