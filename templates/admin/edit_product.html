@@ -44,7 +44,24 @@
         </div>
         <div class="form-group">
             <label>Image URL</label>
-            <input type="url" name="image_url" class="form-control" value="{{ product.image_url }}">
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div style="flex: 1;">
+                    <input type="url" name="image_url" id="image_url_input" class="form-control" value="{{ product.image_url }}" placeholder="Paste image URL here..." oninput="previewImage(this.value)">
+                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
+                        💡 <strong>How to get image:</strong> Go to <a href="https://images.google.com" target="_blank">Google Images</a> → search phone name → right-click image → <em>Copy image address</em> → paste here.
+                    </p>
+                </div>
+                <!-- Live Preview -->
+                <div id="img-preview-box" style="width: 110px; height: 110px; border: 2px dashed rgba(239,91,37,0.4); border-radius: 12px; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: rgba(239,91,37,0.05);">
+                    {% if product.image_url %}
+                    <img id="img-preview" src="{{ product.image_url }}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                    <div id="img-placeholder" style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 8px;">
+                        <i class="fas fa-image" style="font-size: 28px; margin-bottom: 4px; display: block;"></i>Preview
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
         <div style="display: flex; gap: 24px; margin-bottom: 20px;">
             <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer;">
@@ -57,4 +74,15 @@
         <button type="submit" class="btn btn-primary btn-lg">Update Product</button>
     </div>
 </form>
+
+<script>
+function previewImage(url) {
+    const box = document.getElementById('img-preview-box');
+    if (url && url.trim() !== '') {
+        box.innerHTML = `<img id="img-preview" src="${url}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'text-align:center; color:#EF4444; font-size:11px; padding:6px;\'><i class=\'fas fa-exclamation-triangle\' style=\'font-size:24px; margin-bottom:4px; display:block;\'></i>Invalid URL</div>';">`;
+    } else {
+        box.innerHTML = `<div id="img-placeholder" style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 8px;"><i class="fas fa-image" style="font-size: 28px; margin-bottom: 4px; display: block;"></i>Preview</div>`;
+    }
+}
+</script>
 {% endblock %}
